@@ -1,0 +1,16 @@
+body {
+  font-family: "Noto Sans Sinhala", sans-serif;
+  background: linear-gradient(to right, #f8e9a1, #f76c6c);
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+  animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

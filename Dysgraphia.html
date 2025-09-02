@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>අකුරු මිතුරා</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Noto Sans Sinhala', sans-serif;
+  margin:0; padding:0;
+  background: radial-gradient(circle at top left, #fdfbfb, #ebedee, #d0f0fd, #a3e4fc);
+  animation: bgAnim 15s infinite alternate;
+  overflow-x:hidden;
+}
+@keyframes bgAnim {
+  0%{background: radial-gradient(circle at top left, #fdfbfb, #ebedee, #d0f0fd, #a3e4fc);}
+  50%{background: radial-gradient(circle at bottom right, #ffe6f0, #ffd3e0, #ffc0d0, #ffa0b0);}
+  100%{background: radial-gradient(circle at center, #fdfbfb, #d0f0fd, #a3e4fc, #7fc8fa);}
+}
+
+header { background:#0077b6; color:white; padding:1rem; text-align:center; box-shadow:0 4px 6px rgba(0,0,0,0.2);}
+nav { display:flex; justify-content:center; background:#023e8a; flex-wrap:wrap;}
+nav a { color:white; text-decoration:none; padding:1rem; display:flex; align-items:center; gap:0.3rem; transition: transform 0.2s;}
+nav a:hover { background:#0096c7; transform:scale(1.1);}
+section { padding:2rem;}
+h1,h2 { color:#023e8a;}
+.letters { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-top:1rem;}
+.letter { font-size:2rem; text-align:center; background:#fff; border:2px solid #0096c7; border-radius:10px; padding:10px; cursor:pointer; transition: transform 0.2s, background 0.2s;}
+.letter:hover { background:#caf0f8; transform:scale(1.2);}
+.game, .faq, .howto, .feedback { background:#fff; padding:1rem; margin:1rem 0; border-radius:15px; box-shadow:0 6px 12px rgba(0,0,0,0.15);}
+footer { background:#023e8a; color:white; text-align:center; padding:1rem; margin-top:2rem;}
+input, textarea { width:100%; padding:10px; margin:6px 0; border:1px solid #0096c7; border-radius:6px; font-family:inherit;}
+button { background:#0077b6; color:white; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; transition: transform 0.2s;}
+button:hover { background:#0096c7; transform:scale(1.05);}
+@media(max-width:768px){ .letters{ grid-template-columns:repeat(3,1fr); } }
+.game-dashboard { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap:1rem;}
+.game-card { background: linear-gradient(135deg,#f9f9f9,#e0f7fa); border-radius:15px; padding:1rem; box-shadow:0 6px 12px rgba(0,0,0,0.15); text-align:center; transition: transform 0.3s, box-shadow 0.3s;}
+.game-card:hover { transform: translateY(-5px) scale(1.03); box-shadow:0 10px 20px rgba(0,0,0,0.25);}
+.game-card button { margin-top:8px; border-radius:8px; transition: transform 0.2s;}
+.game-card button:hover { transform: scale(1.1); }
+#voiceHistory li:nth-child(even){ background-color:#e0f7fa;}
+#voiceHistory li:nth-child(odd){ background-color:#f1f8e9;}
+#voiceHistory li{ padding:5px; border-radius:6px; margin-bottom:4px;}
+canvas { border:1px solid #0096c7; border-radius:8px; margin-top:1rem;}
+.motivation { color:green; font-weight:bold; margin-top:5px;}
+</style>
+</head>
+<body>
+
+<audio id="clickSound" src="sounds/click.mp3"></audio>
+<audio id="successSound" src="sounds/success.mp3"></audio>
+<audio id="voiceStartSound" src="sounds/voice.mp3"></audio>
+<audio id="traceSound" src="sounds/trace.mp3"></audio>
+
+<header>
+<h1>✍️ අකුරු මිතුරා</h1>
+<p>සිංහල අකුරු, වචන සහ ක්‍රීඩා</p>
+</header>
+
+<nav>
+<a href="#home">🏠 මුල් පිටුව</a>
+<a href="#activities">🔡 ක්‍රියාකාරකම්</a>
+<a href="#games">🎮 ක්‍රීඩා</a>
+<a href="#howto">📖 භාවිතා කරන අයුරු</a>
+<a href="#faq">❓ ප්‍රශ්න</a>
+<a href="#feedback">📝 අදහස්</a>
+<a href="#contact">📞 සම්බන්ධ වීම</a>
+</nav>
+
+<section id="home">
+<h2>මුල් පිටුව</h2>
+<p><b>අරමුණ:</b> "අකුරු මිතුරා" යනු <b>ඩිස්ග්‍රාෆියා</b> ඇති සිසුන්ට සිංහල භාෂාවෙන් ලිවීම සහ කියවීමේදී පහසුව සපයන අඩවියකි.</p>
+</section>
+
+<section id="activities">
+<h2>🔡 ක්‍රියාකාරකම්</h2>
+<p>සියලුම සිංහල අකුරු අභ්‍යාස කරන්න. ක්ලික් කල විට අකුරේ ශබ්දය නිකුත් වේ.</p>
+<div class="letters" id="lettersGrid"></div>
+</section>
+
+<section id="games">
+<h2>🎮 ක්‍රීඩා පුවරුව</h2>
+<div class="game-dashboard">
+
+<div class="game-card">
+<h3>✍️ අකුරු අඳින අභියෝගය</h3>
+<p>අකුරු අභ්‍යාස කරමින් ඔබේ හැකියාව වැඩි කරන්න</p>
+<canvas id="traceCanvas" width="200" height="200"></canvas>
+<button onclick="startTracing()">අකුරක් අභ්‍යාස කරන්න</button>
+<p class="motivation" id="traceMotivation"></p>
+<p>අකුරු නිවැරදිව අඳින හැකියාව: <span id="traceAccuracy">0</span>%</p>
+</div>
+
+<div class="game-card">
+<h3>🎤 වාණිජා-පෙළට පරිවර්තනය</h3>
+<p>ඔබේ කථනය සිංහලට පරිවර්තනය වේ</p>
+<button onclick="startVoice()">කියන්න</button>
+<p id="voiceResult">🎙️ ඔබේ කථනය මෙතන පෙන්වෙනු ඇත</p>
+<h4>📜 පරිවර්තන ඉතිහාසය:</h4>
+<ul id="voiceHistory"></ul>
+<p class="motivation" id="voiceAccuracy">වචන නිවැරදිව හැඳින්වීම: 0%</p>
+</div>
+
+<div class="game-card">
+<h3>🧠 මතක ක්‍රීඩාව</h3>
+<p>අකුරු මතකය වර්ධනය කරගන්න</p>
+<div id="memoryGame"></div>
+<button onclick="initMemoryGame()">ආරම්භ කරන්න</button>
+<p class="motivation" id="memoryMotivation"></p>
+<p>නිවැරදි අනුපිළිවෙල: <span id="memoryAccuracy">0</span>%</p>
+</div>
+
+<div class="game-card">
+<h3>📊 සමස්ත නිවැරදිභාවය</h3>
+<p>ඔබේ ක්‍රීඩා නිවැරදිභාවය මෙතන පෙන්වනු ඇත</p>
+<p>සමස්ත නිවැරදිභාවය: <span id="overallAccuracy">0</span>%</p>
+<button onclick="calculateOverall()">ගණනය කරන්න</button>
+</div>
+
+</div>
+</section>
+
+<section id="howto" class="howto">
+<h2>📖 භාවිතා කරන අයුරු</h2>
+<ol>
+<li>අකුරු මත ක්ලික් කරන්න → අකුර කියවයි.</li>
+<li>අකුරු අඳින අභ්‍යාසය භාවිතා කරන්න.</li>
+<li>ක්‍රීඩා තෝරා → මතකය, ලිවීම සහ ඇස් පුහුණුව පුහුණු කරන්න.</li>
+<li>වාණිජා-පෙළට පරිවර්තනය → ඔබේ කථනය සිංහලට පරිවර්තනය කරයි.</li>
+</ol>
+</section>
+
+<section id="faq" class="faq">
+<h2>❓ ප්‍රශ්න</h2>
+<p><b>මගේ දරුවාට මේ අඩවියෙන් කුමක් සොයාගත හැක?</b> අකුරු හඳුනාගැනීම, අකුරු අඳින අභ්‍යාස, මතක ක්‍රීඩා, වාණිජා-පෙළට පරිවර්තනය.</p>
+</section>
+
+<section id="feedback" class="feedback">
+<h2>📝 අදහස්</h2>
+<form id="feedbackForm">
+<label>නම:</label><input type="text" id="name" required>
+<label>ඊමේල්:</label><input type="email" id="email" required>
+<label>අදහස්:</label><textarea id="message" rows="4" required></textarea>
+<button type="submit">යවන්න</button>
+</form>
+<p id="feedbackMsg" style="color:green; font-weight:bold;"></p>
+</section>
+
+<section id="contact">
+<h2>📞 සම්බන්ධ වීම</h2>
+<p>📞 070 422 6267</p>
+<p>✉️ support@writeease.lk</p>
+</section>
+
+<footer>
+<p>© 2025 අකුරු මිතුරා | ළමුන් සඳහා හිතකාමී අධ්‍යාපනික අඩවිය</p>
+</footer>
+
+<script>
+// Sinhala letters
+const sinhalaLetters=["අ","ආ","ඇ","ඈ","ඉ","ඊ","උ","ඌ","ඍ","ඎ","ඏ","ඐ","එ","ඒ","ඓ","ඔ","ඕ","ඖ","ක","ඛ","ග","ඝ","ඞ","ඟ","ච","ඡ","ජ","ඣ","ඤ","ඥ","ට","ඨ","ඩ","ඪ","ණ","ඬ","ත","ථ","ද","ධ","න","ඳ","ප","ඵ","බ","භ","ම","ඹ","ය","ර","ල","ව","ශ","ෂ","ස","හ","ළ","ෆ"];
+const lettersGrid=document.getElementById("lettersGrid");
+
+// Sounds
+const clickSound=document.getElementById("clickSound");
+const successSound=document.getElementById("successSound");
+const voiceStartSound=document.getElementById("voiceStartSound");
+const traceSound=document.getElementById("traceSound");
+
+// Letters grid with TTS + click sound fix
+sinhalaLetters.forEach(l=>{
+  const div=document.createElement("div");
+  div.className="letter"; div.textContent=l;
+  div.onclick=()=>{
+    clickSound.currentTime=0;
+    clickSound.play();
+    setTimeout(()=>speech(l),100); // delay ensures sound plays before TTS
+  };
+  lettersGrid.appendChild(div);
+});
+
+function speech(txt){
+  const utter=new SpeechSynthesisUtterance(txt);
+  utter.lang="si-LK"; speechSynthesis.speak(utter);
+}
+
+// Tracing Game
+let traceCanvas=document.getElementById("traceCanvas");
+let ctx=traceCanvas.getContext("2d");
+let currentLetterIndex=0;
+let traceDrawn=false;
+let traceAttempts=0, traceCorrect=0;
+
+function startTracing(){
+  ctx.clearRect(0,0,traceCanvas.width,traceCanvas.height);
+  traceDrawn=false;
+  let letter=sinhalaLetters[currentLetterIndex];
+  ctx.font="100px Noto Sans Sinhala";
+  ctx.fillStyle="#e0e0e0";
+  ctx.fillText(letter,50,150);
+
+  traceCanvas.onmousedown=function(e){
+    traceDrawn=true;
+    ctx.strokeStyle="#0096c7";
+    ctx.lineWidth=6;
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX,e.offsetY);
+    traceCanvas.onmousemove=function(e){
+      ctx.lineTo(e.offsetX,e.offsetY);
+      ctx.stroke();
+    }
+  }
+  traceCanvas.onmouseup=function(e){
+    ctx.closePath(); ctx.onmousemove=null;
+    traceAttempts++;
+    if(traceDrawn){ traceCorrect++; document.getElementById("traceMotivation").innerText="හොඳයි! 👏"; }
+    else{ document.getElementById("traceMotivation").innerText="නැවත උත්සාහ කරන්න!"; }
+    let acc=Math.round((traceCorrect/traceAttempts)*100);
+    document.getElementById("traceAccuracy").innerText=acc;
+    currentLetterIndex=(currentLetterIndex+1)%sinhalaLetters.length;
+  }
+}
+
+// Memory Game
+function initMemoryGame(){
+  const game=document.getElementById("memoryGame");
+  game.innerHTML="";
+  const pairs=["අ","ආ","ක","ග","ත","ද"];
+  let cards=[...pairs,...pairs].sort(()=>0.5-Math.random());
+  let flipped=[], matched=0, attempts=0;
+  cards.forEach(letter=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.dataset.letter=letter;
+    div.textContent="❓";
+    div.style.cssText="font-size:2rem;height:80px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#0096c7;color:white;cursor:pointer;margin:5px;";
+    div.onclick=function(){
+      if(flipped.length<2 && !div.classList.contains("flipped")){
+        div.classList.add("flipped"); div.textContent=letter;
+        flipped.push(div);
+        if(flipped.length===2){
+          attempts++;
+          if(flipped[0].dataset.letter===flipped[1].dataset.letter){
+            successSound.play(); matched++;
+            document.getElementById("memoryMotivation").innerText="හොඳයි! 👏";
+            flipped=[]; 
+          }else{
+            setTimeout(()=>{ flipped.forEach(c=>{c.classList.remove("flipped"); c.textContent="❓";}); flipped=[]; },800);
+          }
+          let acc=Math.round((matched/attempts)*100);
+          if(isNaN(acc)) acc=0;
+          document.getElementById("memoryAccuracy").innerText=acc;
+        }
+      }
+    }
+    game.appendChild(div);
+  });
+}
+
+// Voice Recognition
+function startVoice(){
+  voiceStartSound.play();
+  if(!('webkitSpeechRecognition' in window)){ alert("මෙම Browser Voice Recognition සපයන්නේ නැත."); return; }
+  const recog=new webkitSpeechRecognition();
+  recog.lang="si-LK"; recog.continuous=false; recog.interimResults=false;
+  recog.onresult=e=>{
+    let transcript=e.results[0][0].transcript;
+    document.getElementById("voiceResult").textContent="➡️ "+transcript;
+    const li=document.createElement("li"); li.textContent=transcript;
+    document.getElementById("voiceHistory").appendChild(li);
+
+    // simple accuracy: fraction of letters spoken correctly from Sinhala letters
+    let correct=0;
+    for(let i=0;i<transcript.length;i++){ if(sinhalaLetters.includes(transcript[i])) correct++; }
+    let acc=Math.round((correct/transcript.length)*100);
+    document.getElementById("voiceAccuracy").innerText="වචන නිවැරදිව හැඳින්වීම: "+acc+"%";
+  }
+  recog.start();
+}
+
+// Overall Accuracy
+function calculateOverall(){
+  let traceAcc=parseInt(document.getElementById("traceAccuracy").innerText)||0;
+  let memoryAcc=parseInt(document.getElementById("memoryAccuracy").innerText)||0;
+  let voiceAcc=parseInt(document.getElementById("voiceAccuracy").innerText.replace(/\D/g,''))||0;
+  let overall=Math.round((traceAcc+memoryAcc+voiceAcc)/3);
+  document.getElementById("overallAccuracy").innerText=overall;
+}
+
+// Feedback Form
+document.getElementById("feedbackForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  document.getElementById("feedbackMsg").innerText="✅ ඔබේ අදහස් අපට ලැබී ඇත!";
+  this.reset();
+});
+</script>
+</body>
+</html>
