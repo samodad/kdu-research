@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-<meta charset="UTF-8" /> 
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>අකුරු මිතුරා</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
@@ -58,7 +58,7 @@
   <a href="#activities">🔡 ක්‍රියාකාරකම්</a>
   <a href="#games">🎮 ක්‍රීඩා</a>
   <a href="#howto">📖 භාවිතා</a>
-  <a href="#faq">❓ ප්‍රශ්න</a>
+  <a href="#FAQs">❓ ප්‍රශ්න</a>
   <a href="#feedback">📝 අදහස්</a>
   <a href="#contact">📞 සම්බන්ධ</a>
 </nav>
@@ -100,15 +100,45 @@
 
     <!-- Memory -->
     <div class="game-card">
-      <h3>🧠 මතක ක්‍රීඩාව</h3>
-      <p>දෙපැත්තේ සිටින කාඩ් 2 ක් අදාල අකුර සමඟ සමාන නම් තෝරන්න.</p>
-      <div id="memoryGame" class="memory-grid"></div>
-      <div style="text-align:center;margin: top 0.6rem">
-        <button id="memoryStartBtn">ආරම්භ කරන්න</button>
-      </div>
-      <p class="motivation" id="memoryMotivation"></p>
-      <p class="stats">නිවැරදි අනුපිළිවෙල: <span id="memoryAccuracy">0</span>%</p>
-    </div>
+  <h3>🧠 මතක ක්‍රීඩාව</h3>
+  <p>දෙපැත්තේ සිටින කාඩ් 2 ක් අදාල අකුර සමඟ සමාන නම් තෝරන්න.</p>
+  
+  <div id="memoryGame" class="memory-grid"></div>
+  
+  <div style="text-align:center; margin-top:0.6rem">
+    <button id="memoryStartBtn">ආරම්භ කරන්න</button>
+  </div>
+  
+  <p class="motivation" id="memoryMotivation"></p>
+  <p class="stats">නිවැරදි අනුපිළිවෙල: <span id="memoryAccuracy">0</span>%</p>
+</div>
+<script>
+(function(){
+  const memoryGrid = document.getElementById('memoryGame');
+  const startBtn = document.getElementById('memoryStartBtn');
+  const ACC_SPAN = document.getElementById('memoryAccuracy');
+
+  function createCards(count = 12) {
+    memoryGrid.innerHTML = ''; // clear old cards
+    for (let i = 0; i < count; i++) {
+      const card = document.createElement('div');
+      card.className = 'memory-card';
+      card.dataset.index = i;
+      card.textContent = '?';
+      // attach events here if needed
+      memoryGrid.appendChild(card); // <-- correctly append INSIDE memoryGrid
+    }
+  }
+
+  startBtn.addEventListener('click', () => {
+    createCards(12);
+    ACC_SPAN.textContent = '0';
+  });
+
+  // create initial grid automatically
+  createCards(12);
+})();
+</script>
 
     <!-- Vowel/Consonant -->
     <div class="game-card">
@@ -181,11 +211,11 @@
 </section>
 
 <!-- FAQ -->
-<section id="faq" class="faq">
+<section id="FAQs" class="FAQs">
   <h2>❓ ප්‍රශ්න</h2>
   <p><b>මගේ දරුවාට මේ අඩවියෙන් කුමක් සොයාගත හැක?</b> අකුරු හඳුනාගැනීම, අකුරු අඳින අභ්‍යාස, මතක ක්‍රීඩා, හා වර්ගීකරණ/වේග ක්‍රීඩා.</p>
   <p><b>මෙම අඩවිය භාවිතා කිරීමට අමතර මෘදුකාංග අවශ්‍යද?</b> නැහැ, ඔබේ බ්රවුසරයෙන්ම මේ අඩවිය භාවිතා කළ හැක. (ඒත් Voice features සඳහා Chrome/Edge සුදුසු වේ.)</p>
-  <p><b>මෙම අඩවිය සහාය කරන දරුවන්</b> විශේෂයෙන්ම <b>ඩිස්ග්‍රාෆියා</b> සහ අකුරු ලිවීමේ අපහසුතා ඇති දරුවන්ට, නමුත් ඕනෑම ළමකුටම උදව් වේ.</p>
+  <p><b>මෙම අඩවිය සහාය කරන දරුවන්</b> විශේෂයෙන්ම <b>ඩිස්ග්‍රාෆියා</b> සහ අකුරු ලිවීමේ අපහසුතා ඇති දරුවන්ට, නමුත් ඕනෑම ළමයෙක්ටම උදව් වේ.</p>
 </section>
 
 <!-- Feedback -->
