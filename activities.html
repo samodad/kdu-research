@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ක්‍රියාකාරකම් - අකුරු මිතුරා</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0077b6;
+            --secondary: #0096c7;
+            --accent: #023e8a;
+            --background: #e0f7fa;
+            --success: #2a9d8f;
+            --warning: #f77f00;
+            --danger: #e76f51;
+            --light: #ffffff;
+            --dark: #023e8a;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #f0f9ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--light);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        main {
+            padding: 3rem 0;
+        }
+
+        .activity-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .activity-card h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .target-letter {
+            font-size: 4rem;
+            color: var(--danger);
+            margin: 1rem 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .letters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin: 2rem 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .letter {
+            font-size: 2.5rem;
+            text-align: center;
+            background: var(--light);
+            border: 3px solid var(--secondary);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .letter:hover {
+            transform: scale(1.1);
+            background: #caf0f8;
+            border-color: var(--primary);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .letter.correct {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+            animation: correctPulse 0.6s ease-in-out;
+        }
+
+        .letter.wrong {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+            animation: wrongShake 0.6s ease-in-out;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,119,182,0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #20c997);
+        }
+
+        .stats {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #20c997);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .letters-grid {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+                gap: 10px;
+            }
+            
+            .letter {
+                font-size: 2rem;
+                padding: 15px;
+            }
+            
+            .target-letter {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> ආපසු
+            </a>
+            <h1><i class="fas fa-search"></i> ක්‍රියාකාරකම්</h1>
+            <p>අකුරු හඳුනාගැනීම සහ අභ්‍යාස</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="activity-card" id="find-letter">
+                <h2>🔍 අකුරු සොයන්න</h2>
+                <p>පෙන්වූ අකුර ජාලකය එකෙන් සොයා ක්ලික් කරන්න. මෙය අකුරු හඳුනාගැනීමේ හැකියාව වැඩිදියුණු කරයි.</p>
+                
+                <div class="target-letter" id="targetLetter">අ</div>
+                
+                <div class="letters-grid" id="lettersGrid"></div>
+                
+                <div class="message" id="activityMsg" style="display: none;"></div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="findScore">0</span>
+                        <span class="stat-label">නිවැරදි</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="findTotal">0</span>
+                        <span class="stat-label">මුළු උත්සාහ</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="findAccuracy">0%</span>
+                        <span class="stat-label">කාර්ය සාධනය</span>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn" onclick="newTarget()">
+                        <i class="fas fa-refresh"></i> නව අකුරක්
+                    </button>
+                    <button class="btn btn-success" onclick="resetGame()">
+                        <i class="fas fa-undo"></i> ආරම්භයට
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sinhala letters array
+        const sinhalaLetters = [
+            "අ","ආ","ඇ","ඈ","ඉ","ඊ","උ","ඌ","ඍ","ඎ","ඏ","ඐ","එ","ඒ","ඓ","ඔ","ඕ","ඖ",
+            "ක","ඛ","ග","ඝ","ඞ","ඟ","ච","ඡ","ජ","ඣ","ඤ","ඥ","ට","ඨ","ඩ","ඪ","ණ","ඬ",
+            "ත","ථ","ද","ධ","න","ඳ","ප","ඵ","බ","භ","ම","ඹ","ය","ර","ල","ව","ශ","ෂ","ස","හ","ළ","ෆ"
+        ];
+
+        // Game state
+        let findCorrect = 0;
+        let findTotal = 0;
+        let currentTarget = '';
+
+        // DOM elements
+        const targetLetterEl = document.getElementById('targetLetter');
+        const lettersGrid = document.getElementById('lettersGrid');
+        const activityMsg = document.getElementById('activityMsg');
+        const progressFill = document.getElementById('progressFill');
+
+        // Initialize game
+        function initGame() {
+            createLettersGrid();
+            newTarget();
+            updateStats();
+        }
+
+        // Create letters grid
+        function createLettersGrid() {
+            lettersGrid.innerHTML = '';
+            
+            // Shuffle letters for variety
+            const shuffledLetters = [...sinhalaLetters].sort(() => Math.random() - 0.5);
+            
+            shuffledLetters.forEach(letter => {
+                const letterDiv = document.createElement('div');
+                letterDiv.className = 'letter';
+                letterDiv.textContent = letter;
+                letterDiv.addEventListener('click', () => checkLetter(letter, letterDiv));
+                lettersGrid.appendChild(letterDiv);
+            });
+        }
+
+        // Generate new target letter
+        function newTarget() {
+            currentTarget = sinhalaLetters[Math.floor(Math.random() * sinhalaLetters.length)];
+            targetLetterEl.textContent = currentTarget;
+            activityMsg.style.display = 'none';
+            
+            // Reset all letters
+            document.querySelectorAll('.letter').forEach(letter => {
+                letter.className = 'letter';
+            });
+        }
+
+        // Check if clicked letter matches target
+        function checkLetter(letter, letterDiv) {
+            if (letterDiv.classList.contains('correct') || letterDiv.classList.contains('wrong')) {
+                return; // Already clicked
+            }
+
+            findTotal++;
+            
+            if (letter === currentTarget) {
+                findCorrect++;
+                letterDiv.classList.add('correct');
+                showMessage('හොඳයි! 👏 නිවැරදියි.', 'success');
+                
+                // Play success sound if available
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU5k9n1unEiBC13yO/eizEIHWq+8+OWT');
+                audio.play().catch(() => {}); // Ignore errors if audio fails
+                
+                // Auto-generate new target after a short delay
+                setTimeout(() => {
+                    newTarget();
+                }, 1500);
+            } else {
+                letterDiv.classList.add('wrong');
+                showMessage('නැවත උත්සාහ කරන්න!', 'error');
+                
+                // Remove wrong class after animation
+                setTimeout(() => {
+                    letterDiv.classList.remove('wrong');
+                }, 600);
+            }
+            
+            updateStats();
+            saveProgress();
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            activityMsg.textContent = text;
+            activityMsg.className = `message ${type}`;
+            activityMsg.style.display = 'block';
+            
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                activityMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('findScore').textContent = findCorrect;
+            document.getElementById('findTotal').textContent = findTotal;
+            
+            const accuracy = findTotal ? Math.round((findCorrect / findTotal) * 100) : 0;
+            document.getElementById('findAccuracy').textContent = accuracy + '%';
+            
+            // Update progress bar
+            const progress = findTotal ? (findCorrect / findTotal) * 100 : 0;
+            progressFill.style.width = progress + '%';
+        }
+
+        // Reset game
+        function resetGame() {
+            findCorrect = 0;
+            findTotal = 0;
+            newTarget();
+            updateStats();
+            showMessage('ක්‍රීඩාව ආරම්භයට ගෙන යන ලදී!', 'success');
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            const progress = {
+                findCorrect,
+                findTotal,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('akuruMithuraFindLetter', JSON.stringify(progress));
+            
+            // Also save to main game history
+            const gameHistory = JSON.parse(localStorage.getItem("akuruMithuraHistory") || "[]");
+            gameHistory.push({
+                timestamp: new Date().toLocaleString(),
+                game: "find-letter",
+                attempts: findTotal,
+                correct: findCorrect,
+                accuracy: findTotal ? Math.round((findCorrect / findTotal) * 100) : 0
+            });
+            localStorage.setItem("akuruMithuraHistory", JSON.stringify(gameHistory));
+        }
+
+        // Load progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('akuruMithuraFindLetter');
+            if (saved) {
+                const progress = JSON.parse(saved);
+                findCorrect = progress.findCorrect || 0;
+                findTotal = progress.findTotal || 0;
+            }
+        }
+
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProgress();
+            initGame();
+        });
+    </script>
+</body>
+</html>

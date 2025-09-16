@@ -1,0 +1,29 @@
+{
+  "name": "akuru-mithura",
+  "version": "1.0.0",
+  "description": "Sinhala letter learning platform for children with dysgraphia",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 3000 -o",
+    "build": "echo 'No build process needed for static site'",
+    "deploy": "echo 'Deploy to your preferred static hosting service'"
+  },
+  "keywords": [
+    "sinhala",
+    "education",
+    "dysgraphia",
+    "children",
+    "learning",
+    "games"
+  ],
+  "author": "Akuru Mithura Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/akuru-mithura.git"
+  },
+  "homepage": "https://your-username.github.io/akuru-mithura"
+}

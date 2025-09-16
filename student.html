@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>සිසුන් - අකුරු මිතුරා</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --secondary: #34a853;
+            --accent: #ea4335;
+            --background: #f8f9fa;
+            --light: #ffffff;
+            --dark: #202124;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: var(--background);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--light);
+            border-bottom: 1px solid #dadce0;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .login-card {
+            max-width: 400px;
+            margin: 60px auto;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .login-card h1 {
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .login-card p {
+            color: #5f6368;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Noto Sans Sinhala', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1557b0;
+        }
+
+        .btn-secondary {
+            background: #f1f3f4;
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: #e8eaed;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .welcome-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-card h1 {
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .classroom-info {
+            background: #e8f0fe;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .classroom-info h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .classroom-id {
+            font-family: monospace;
+            background: var(--light);
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #dadce0;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .game-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid #dadce0;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .game-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .game-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .game-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .game-description {
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f1f3f4;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .stats-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #5f6368;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #137333;
+        }
+
+        .error-message {
+            background: #fce8e6;
+            color: #d93025;
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 16px;
+            }
+            
+            .login-card {
+                margin: 40px auto;
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-user-graduate"></i>
+                අකුරු මිතුරා - සිසුන්
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="login-card">
+                <h1>පන්තියට සම්බන්ධ වන්න</h1>
+                <p>ගුරුවරයාගෙන් ලබාගත් පන්ති කාමර ID භාවිතා කරන්න</p>
+                <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                    <strong>උදව්:</strong> පළමුව ගුරුවරයා <a href="teacher.html" style="color: #1a73e8;">මෙතැනින්</a> පන්ති කාමරයක් සාදා ඔබට ID ලබාදිය යුතුය.
+                </p>
+                
+                <div class="message" id="errorMessage"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="studentName">ඔබේ නම</label>
+                        <input type="text" id="studentName" class="form-input" placeholder="සිසුගේ නම" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="classroomId">පන්ති කාමර ID</label>
+                        <input type="text" id="classroomId" class="form-input" placeholder="ගුරුවරයාගෙන් ලබාගත් ID" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> පන්තියට සම්බන්ධ වන්න
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="createTestClassroom()" style="margin-top: 10px;">
+                        <i class="fas fa-flask"></i> පරීක්ෂණ පන්ති කාමරය සාදන්න
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-user-graduate"></i>
+                අකුරු මිතුරා
+            </div>
+            <div class="user-info">
+                <span id="studentNameDisplay">සිසුවා</span>
+                <button class="btn btn-secondary" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> පිටව යන්න
+                </button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="welcome-card">
+                <h1>ආයුබෝවන්!</h1>
+                <div class="classroom-info">
+                    <h3><i class="fas fa-chalkboard"></i> පන්ති කාමරය</h3>
+                    <p><strong>නම:</strong> <span id="classroomName"></span></p>
+                    <p><strong>ගුරුවරයා:</strong> <span id="teacherName"></span></p>
+                    <div class="classroom-id">ID: <span id="classroomIdDisplay"></span></div>
+                </div>
+            </div>
+
+            <div class="stats-card">
+                <h3><i class="fas fa-chart-bar"></i> ඔබේ ප්‍රගතිය</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalGames">0</div>
+                        <div class="stat-label">ක්‍රීඩා</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="averageAccuracy">0%</div>
+                        <div class="stat-label">සාමාන්‍ය නිරවද්‍යතාව</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalTime">0</div>
+                        <div class="stat-label">විනාඩි</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="games-grid">
+                <a href="activities.html" class="game-card">
+                    <div class="game-icon">🔍</div>
+                    <div class="game-title">අකුරු සොයන්න</div>
+                    <div class="game-description">පෙන්වූ අකුර ජාලකය එකෙන් සොයා ක්ලික් කරන්න</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="findLetterProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="findLetterText">0% සම්පූර්ණ</div>
+                </a>
+
+                <a href="games.html" class="game-card">
+                    <div class="game-icon">✍️</div>
+                    <div class="game-title">අකුරු අඳින්න</div>
+                    <div class="game-description">අකුරේදී අළු දළ සටහන එකට සමීපව අඳින්න</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="tracingProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="tracingText">0% සම්පූර්ණ</div>
+                </a>
+
+                <a href="games.html" class="game-card">
+                    <div class="game-icon">🧠</div>
+                    <div class="game-title">මතක ක්‍රීඩාව</div>
+                    <div class="game-description">සමාන අකුරු යුගල සොයාගන්න</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="memoryProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="memoryText">0% සම්පූර්ණ</div>
+                </a>
+
+                <a href="games.html" class="game-card">
+                    <div class="game-icon">🅰️</div>
+                    <div class="game-title">ස්වර/ව්‍යංජන</div>
+                    <div class="game-description">ස්වර අකුරු පමණක් තෝරන්න</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="vowelProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="vowelText">0% සම්පූර්ණ</div>
+                </a>
+
+                <a href="games.html" class="game-card">
+                    <div class="game-icon">⚡</div>
+                    <div class="game-title">ක්ෂණික ක්‍රීඩාව</div>
+                    <div class="game-description">වෙලාවේදී ඉලක්ක අකුර ට්‍රයි කරන්න</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="speedProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="speedText">0% සම්පූර්ණ</div>
+                </a>
+
+                <a href="games.html" class="game-card">
+                    <div class="game-icon">🎤</div>
+                    <div class="game-title">හඬ පටිගත කිරීම</div>
+                    <div class="game-description">සිංහලෙන් කතා කරන්න සහ පිටපත ලබාගන්න</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="voiceProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="voiceText">0% සම්පූර්ණ</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Student Management System
+        class StudentManager {
+            constructor() {
+                this.classrooms = JSON.parse(localStorage.getItem('akuruMithuraClassrooms') || '[]');
+                this.currentStudent = JSON.parse(localStorage.getItem('currentStudent') || 'null');
+                this.init();
+            }
+
+            init() {
+                // Check URL parameters for classroom ID
+                const urlParams = new URLSearchParams(window.location.search);
+                const classId = urlParams.get('class');
+                if (classId) {
+                    document.getElementById('classroomId').value = classId;
+                }
+
+                if (this.currentStudent) {
+                    this.showDashboard();
+                }
+            }
+
+            login(studentName, classroomId) {
+                console.log('Available classrooms:', this.classrooms);
+                console.log('Looking for classroom ID:', classroomId);
+                
+                const classroom = this.classrooms.find(c => c.id === classroomId);
+                if (!classroom) {
+                    this.showError('වලංගු නොවන පන්ති කාමර ID. ගුරුවරයා පන්ති කාමරයක් සාදා තිබිය යුතුය.');
+                    return;
+                }
+
+                const student = {
+                    name: studentName,
+                    classroomId: classroomId,
+                    joinedAt: new Date().toISOString()
+                };
+
+                // Add student to classroom if not already exists
+                const existingStudent = classroom.students.find(s => s.name === studentName);
+                if (!existingStudent) {
+                    classroom.students.push(student);
+                    localStorage.setItem('akuruMithuraClassrooms', JSON.stringify(this.classrooms));
+                }
+
+                this.currentStudent = student;
+                localStorage.setItem('currentStudent', JSON.stringify(student));
+                this.showDashboard();
+            }
+
+            showDashboard() {
+                const classroom = this.classrooms.find(c => c.id === this.currentStudent.classroomId);
+                if (!classroom) {
+                    this.showError('පන්ති කාමරය හමු නොවීය');
+                    return;
+                }
+
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                
+                document.getElementById('studentNameDisplay').textContent = this.currentStudent.name;
+                document.getElementById('classroomName').textContent = classroom.name;
+                document.getElementById('teacherName').textContent = classroom.teacher;
+                document.getElementById('classroomIdDisplay').textContent = classroom.id;
+
+                this.updateProgress();
+            }
+
+            updateProgress() {
+                const gameHistory = JSON.parse(localStorage.getItem("akuruMithuraHistory") || "[]");
+                const studentData = gameHistory.filter(record => 
+                    record.classroom === this.currentStudent.classroomId && 
+                    record.student === this.currentStudent.name
+                );
+
+                // Calculate overall stats
+                const totalGames = studentData.length;
+                const totalAccuracy = studentData.reduce((sum, record) => sum + (record.accuracy || 0), 0);
+                const averageAccuracy = totalGames > 0 ? Math.round(totalAccuracy / totalGames) : 0;
+
+                document.getElementById('totalGames').textContent = totalGames;
+                document.getElementById('averageAccuracy').textContent = averageAccuracy + '%';
+
+                // Update individual game progress
+                this.updateGameProgress('find-letter', 'findLetter');
+                this.updateGameProgress('tracing', 'tracing');
+                this.updateGameProgress('memory', 'memory');
+                this.updateGameProgress('vowel-consonant', 'vowel');
+                this.updateGameProgress('tap', 'speed');
+                this.updateGameProgress('voice', 'voice');
+            }
+
+            updateGameProgress(gameType, elementPrefix) {
+                const gameHistory = JSON.parse(localStorage.getItem("akuruMithuraHistory") || "[]");
+                const gameData = gameHistory.filter(record => 
+                    record.game === gameType && 
+                    record.classroom === this.currentStudent.classroomId && 
+                    record.student === this.currentStudent.name
+                );
+
+                if (gameData.length === 0) {
+                    document.getElementById(elementPrefix + 'Progress').style.width = '0%';
+                    document.getElementById(elementPrefix + 'Text').textContent = '0% සම්පූර්ණ';
+                    return;
+                }
+
+                const totalAccuracy = gameData.reduce((sum, record) => sum + (record.accuracy || 0), 0);
+                const averageAccuracy = Math.round(totalAccuracy / gameData.length);
+                
+                document.getElementById(elementPrefix + 'Progress').style.width = averageAccuracy + '%';
+                document.getElementById(elementPrefix + 'Text').textContent = averageAccuracy + '% සම්පූර්ණ';
+            }
+
+            showError(message) {
+                const errorEl = document.getElementById('errorMessage');
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+                setTimeout(() => errorEl.style.display = 'none', 3000);
+            }
+
+            logout() {
+                localStorage.removeItem('currentStudent');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Initialize
+        const studentManager = new StudentManager();
+
+        // Global functions
+        function logout() {
+            studentManager.logout();
+        }
+
+        function createTestClassroom() {
+            const testClassroom = {
+                id: 'TEST123',
+                name: 'පරීක්ෂණ පන්තිය',
+                teacher: 'පරීක්ෂණ ගුරුවරයා',
+                teacherId: 'test-teacher',
+                students: [],
+                createdAt: new Date().toISOString(),
+                gamesPlayed: 0
+            };
+
+            // Add to existing classrooms
+            const existingClassrooms = JSON.parse(localStorage.getItem('akuruMithuraClassrooms') || '[]');
+            const classroomExists = existingClassrooms.find(c => c.id === 'TEST123');
+            
+            if (!classroomExists) {
+                existingClassrooms.push(testClassroom);
+                localStorage.setItem('akuruMithuraClassrooms', JSON.stringify(existingClassrooms));
+            }
+
+            // Fill the form with test data
+            document.getElementById('studentName').value = 'පරීක්ෂණ සිසුවා';
+            document.getElementById('classroomId').value = 'TEST123';
+            
+            alert('පරීක්ෂණ පන්ති කාමරය සාදන ලදී! ID: TEST123');
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const studentName = document.getElementById('studentName').value.trim();
+            const classroomId = document.getElementById('classroomId').value.trim();
+            
+            if (studentName && classroomId) {
+                studentManager.login(studentName, classroomId);
+            }
+        });
+    </script>
+</body>
+</html>

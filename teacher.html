@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ගුරුවරුන් - අකුරු මිතුරා</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --secondary: #34a853;
+            --accent: #ea4335;
+            --background: #f8f9fa;
+            --light: #ffffff;
+            --dark: #202124;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: var(--background);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--light);
+            border-bottom: 1px solid #dadce0;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .welcome-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-card h1 {
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .welcome-card p {
+            color: #5f6368;
+            font-size: 16px;
+        }
+
+        .classroom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .classroom-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid #dadce0;
+            transition: all 0.2s ease;
+        }
+
+        .classroom-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .classroom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .classroom-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .classroom-id {
+            font-size: 14px;
+            color: #5f6368;
+            background: #f1f3f4;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .classroom-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .classroom-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1557b0;
+        }
+
+        .btn-secondary {
+            background: #f1f3f4;
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: #e8eaed;
+        }
+
+        .btn-danger {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d33b2c;
+        }
+
+        .create-classroom {
+            background: var(--light);
+            border: 2px dashed #dadce0;
+            border-radius: var(--border-radius);
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .create-classroom:hover {
+            border-color: var(--primary);
+            background: #f8f9ff;
+        }
+
+        .create-classroom i {
+            font-size: 48px;
+            color: #5f6368;
+            margin-bottom: 16px;
+        }
+
+        .create-classroom h3 {
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .create-classroom p {
+            color: #5f6368;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            max-width: 500px;
+            margin: 10% auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #5f6368;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Noto Sans Sinhala', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .data-export {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .data-export h3 {
+            color: var(--dark);
+            margin-bottom: 16px;
+        }
+
+        .export-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #137333;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .error-message {
+            background: #fce8e6;
+            color: #d93025;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .classroom-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-chalkboard-teacher"></i>
+            අකුරු මිතුරා - ගුරුවරුන්
+        </div>
+        <div class="user-info">
+            <span id="teacherName">ගුරුවරයා</span>
+            <button class="btn btn-secondary" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> පිටව යන්න
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1>ආයුබෝවන්!</h1>
+            <p>ඔබේ පන්ති කාමර කළමනාකරණය කරන්න සහ සිසුන්ගේ ප්‍රගතිය නිරීක්ෂණය කරන්න</p>
+        </div>
+
+        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="data-export">
+            <h3><i class="fas fa-download"></i> දත්ත බාගත කිරීම</h3>
+            <div class="export-actions">
+                <button class="btn btn-primary" onclick="exportAllData()">
+                    <i class="fas fa-file-csv"></i> සියලු දත්ත (CSV)
+                </button>
+                <button class="btn btn-secondary" onclick="exportClassroomData()">
+                    <i class="fas fa-users"></i> පන්ති කාමර දත්ත
+                </button>
+            </div>
+        </div>
+
+        <div class="classroom-grid" id="classroomGrid">
+            <!-- Classrooms will be loaded here -->
+        </div>
+
+        <div class="create-classroom" onclick="showCreateModal()">
+            <i class="fas fa-plus-circle"></i>
+            <h3>නව පන්ති කාමරයක් සාදන්න</h3>
+            <p>සිසුන්ට ලබාදීමට පන්ති කාමර ID එකක් සාදන්න</p>
+        </div>
+    </div>
+
+    <!-- Create Classroom Modal -->
+    <div class="modal" id="createModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">නව පන්ති කාමරය</h3>
+                <button class="close" onclick="hideCreateModal()">&times;</button>
+            </div>
+            <form id="createForm">
+                <div class="form-group">
+                    <label class="form-label" for="className">පන්ති කාමර නම</label>
+                    <input type="text" id="className" class="form-input" placeholder="උදා: 5-A පන්තිය" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="teacherNameInput">ගුරුවරයාගේ නම</label>
+                    <input type="text" id="teacherNameInput" class="form-input" placeholder="ඔබේ නම" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideCreateModal()">අවලංගු</button>
+                    <button type="submit" class="btn btn-primary">සාදන්න</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Teacher Management System
+        class TeacherManager {
+            constructor() {
+                this.classrooms = JSON.parse(localStorage.getItem('akuruMithuraClassrooms') || '[]');
+                this.currentTeacher = JSON.parse(localStorage.getItem('currentTeacher') || 'null');
+                this.init();
+            }
+
+            init() {
+                if (!this.currentTeacher) {
+                    this.showLoginModal();
+                } else {
+                    this.loadClassrooms();
+                    document.getElementById('teacherName').textContent = this.currentTeacher.name;
+                }
+            }
+
+            showLoginModal() {
+                const name = prompt('ඔබේ නම ඇතුළත් කරන්න:');
+                if (name && name.trim()) {
+                    this.currentTeacher = { name: name.trim(), id: Date.now() };
+                    localStorage.setItem('currentTeacher', JSON.stringify(this.currentTeacher));
+                    document.getElementById('teacherName').textContent = this.currentTeacher.name;
+                    this.loadClassrooms();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+
+            loadClassrooms() {
+                const grid = document.getElementById('classroomGrid');
+                const teacherClassrooms = this.classrooms.filter(c => c.teacherId === this.currentTeacher.id);
+                
+                if (teacherClassrooms.length === 0) {
+                    grid.innerHTML = '<div class="create-classroom" onclick="showCreateModal()"><i class="fas fa-plus-circle"></i><h3>පළමු පන්ති කාමරය සාදන්න</h3><p>ඔබේ සිසුන්ට ලබාදීමට පන්ති කාමර ID එකක් සාදන්න</p></div>';
+                    return;
+                }
+
+                grid.innerHTML = teacherClassrooms.map(classroom => `
+                    <div class="classroom-card">
+                        <div class="classroom-header">
+                            <div>
+                                <div class="classroom-title">${classroom.name}</div>
+                                <div class="classroom-id">ID: ${classroom.id}</div>
+                            </div>
+                        </div>
+                        <div class="classroom-stats">
+                            <div class="stat">
+                                <div class="stat-number">${classroom.students ? classroom.students.length : 0}</div>
+                                <div class="stat-label">සිසුන්</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">${classroom.gamesPlayed || 0}</div>
+                                <div class="stat-label">ක්‍රීඩා</div>
+                            </div>
+                        </div>
+                        <div class="classroom-actions">
+                            <button class="btn btn-primary" onclick="copyClassroomLink('${classroom.id}')">
+                                <i class="fas fa-copy"></i> ලින්ක් පිටපත්
+                            </button>
+                            <button class="btn btn-secondary" onclick="viewClassroomData('${classroom.id}')">
+                                <i class="fas fa-chart-bar"></i> දත්ත
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteClassroom('${classroom.id}')">
+                                <i class="fas fa-trash"></i> මකන්න
+                            </button>
+                        </div>
+                    </div>
+                `).join('') + '<div class="create-classroom" onclick="showCreateModal()"><i class="fas fa-plus-circle"></i><h3>නව පන්ති කාමරය</h3><p>තවත් පන්ති කාමරයක් සාදන්න</p></div>';
+            }
+
+            createClassroom(name, teacherName) {
+                const classroomId = this.generateClassroomId();
+                const classroom = {
+                    id: classroomId,
+                    name: name,
+                    teacher: teacherName,
+                    teacherId: this.currentTeacher.id,
+                    students: [],
+                    createdAt: new Date().toISOString(),
+                    gamesPlayed: 0
+                };
+
+                this.classrooms.push(classroom);
+                localStorage.setItem('akuruMithuraClassrooms', JSON.stringify(this.classrooms));
+                this.loadClassrooms();
+                this.showSuccess(`පන්ති කාමරය "${name}" සාර්ථකව සාදන ලදී!`);
+            }
+
+            generateClassroomId() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                for (let i = 0; i < 6; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+
+            copyClassroomLink(classroomId) {
+                const link = `${window.location.origin}/student.html?class=${classroomId}`;
+                navigator.clipboard.writeText(link).then(() => {
+                    this.showSuccess('පන්ති කාමර ලින්ක් පිටපත් කරන ලදී!');
+                }).catch(() => {
+                    this.showError('පිටපත් කිරීම අසාර්ථකයි');
+                });
+            }
+
+            viewClassroomData(classroomId) {
+                const classroom = this.classrooms.find(c => c.id === classroomId);
+                if (!classroom) return;
+
+                const gameHistory = JSON.parse(localStorage.getItem("akuruMithuraHistory") || "[]");
+                const classroomData = gameHistory.filter(record => record.classroom === classroomId);
+                
+                if (classroomData.length === 0) {
+                    this.showError('මෙම පන්ති කාමරය සඳහා දත්ත නොමැත');
+                    return;
+                }
+
+                this.exportData(classroomData, `classroom_${classroomId}_data.csv`);
+            }
+
+            deleteClassroom(classroomId) {
+                if (!confirm('මෙම පන්ති කාමරය මකා දැමීමට අවශ්‍යද?')) return;
+
+                this.classrooms = this.classrooms.filter(c => c.id !== classroomId);
+                localStorage.setItem('akuruMithuraClassrooms', JSON.stringify(this.classrooms));
+                this.loadClassrooms();
+                this.showSuccess('පන්ති කාමරය මකා දමන ලදී');
+            }
+
+            exportAllData() {
+                const gameHistory = JSON.parse(localStorage.getItem("akuruMithuraHistory") || "[]");
+                if (gameHistory.length === 0) {
+                    this.showError('බාගත කිරීමට දත්ත නොමැත');
+                    return;
+                }
+                this.exportData(gameHistory, 'all_akuru_mithura_data.csv');
+            }
+
+            exportClassroomData() {
+                const gameHistory = JSON.parse(localStorage.getItem("akuruMithuraHistory") || "[]");
+                const teacherData = gameHistory.filter(record => 
+                    this.classrooms.some(c => c.id === record.classroom && c.teacherId === this.currentTeacher.id)
+                );
+                
+                if (teacherData.length === 0) {
+                    this.showError('ඔබේ පන්ති කාමර සඳහා දත්ත නොමැත');
+                    return;
+                }
+                this.exportData(teacherData, 'my_classrooms_data.csv');
+            }
+
+            exportData(data, filename) {
+                let csv = "Timestamp,Classroom,Student,Game,Attempts,Correct,Accuracy,Extra\n";
+                data.forEach(record => {
+                    const extra = (record.extra || "").toString().replace(/"/g, '""');
+                    csv += `"${record.timestamp}","${record.classroom || ''}","${record.student || ''}","${record.game}",${record.attempts || ""},${record.correct || ""},${record.accuracy || ""},"${extra}"\n`;
+                });
+                
+                const blob = new Blob([csv], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showSuccess('දත්ත බාගත කිරීම සාර්ථකයි!');
+            }
+
+            showSuccess(message) {
+                const successEl = document.getElementById('successMessage');
+                successEl.textContent = message;
+                successEl.style.display = 'block';
+                setTimeout(() => successEl.style.display = 'none', 3000);
+            }
+
+            showError(message) {
+                const errorEl = document.getElementById('errorMessage');
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+                setTimeout(() => errorEl.style.display = 'none', 3000);
+            }
+
+            logout() {
+                localStorage.removeItem('currentTeacher');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Initialize
+        const teacherManager = new TeacherManager();
+
+        // Global functions
+        function showCreateModal() {
+            document.getElementById('createModal').style.display = 'block';
+        }
+
+        function hideCreateModal() {
+            document.getElementById('createModal').style.display = 'none';
+            document.getElementById('createForm').reset();
+        }
+
+        function copyClassroomLink(classroomId) {
+            teacherManager.copyClassroomLink(classroomId);
+        }
+
+        function viewClassroomData(classroomId) {
+            teacherManager.viewClassroomData(classroomId);
+        }
+
+        function deleteClassroom(classroomId) {
+            teacherManager.deleteClassroom(classroomId);
+        }
+
+        function exportAllData() {
+            teacherManager.exportAllData();
+        }
+
+        function exportClassroomData() {
+            teacherManager.exportClassroomData();
+        }
+
+        function logout() {
+            teacherManager.logout();
+        }
+
+        // Form submission
+        document.getElementById('createForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const className = document.getElementById('className').value.trim();
+            const teacherName = document.getElementById('teacherNameInput').value.trim();
+            
+            if (className && teacherName) {
+                teacherManager.createClassroom(className, teacherName);
+                hideCreateModal();
+            }
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('createModal');
+            if (e.target === modal) {
+                hideCreateModal();
+            }
+        });
+    </script>
+</body>
+</html>

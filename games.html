@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ක්‍රීඩා - අකුරු මිතුරා</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0077b6;
+            --secondary: #0096c7;
+            --accent: #023e8a;
+            --background: #e0f7fa;
+            --success: #2a9d8f;
+            --warning: #f77f00;
+            --danger: #e76f51;
+            --light: #ffffff;
+            --dark: #023e8a;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #f0f9ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--light);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        main {
+            padding: 3rem 0;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .game-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        canvas {
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin: 1rem auto;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,119,182,0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #20c997);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #fd7e14);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc3545);
+        }
+
+        .stats {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Memory Game Styles */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .memory-card {
+            width: 80px;
+            height: 80px;
+            perspective: 800px;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+
+        .memory-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card.flipped .memory-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card-front,
+        .memory-card-back {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            backface-visibility: hidden;
+        }
+
+        .memory-card-front {
+            background: var(--secondary);
+            color: var(--light);
+        }
+
+        .memory-card-back {
+            background: var(--light);
+            border: 2px solid var(--secondary);
+            transform: rotateY(180deg);
+            color: var(--accent);
+        }
+
+        /* Vowel/Consonant Game */
+        .grid-mini {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 1rem 0;
+        }
+
+        .tile {
+            background: var(--secondary);
+            color: var(--light);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .tile:hover {
+            transform: scale(1.05);
+        }
+
+        .tile.correct {
+            background: var(--success);
+        }
+
+        .tile.wrong {
+            background: var(--danger);
+        }
+
+        /* Voice Recording */
+        .voice-controls {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .voice-controls button {
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            width: 100%;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        audio {
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        /* Speed Tap Game */
+        .tap-target {
+            font-size: 3rem;
+            color: var(--danger);
+            text-align: center;
+            margin: 1rem 0;
+            font-weight: 700;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--warning);
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .memory-card {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .grid-mini {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> ආපසු
+            </a>
+            <h1><i class="fas fa-gamepad"></i> ක්‍රීඩා</h1>
+            <p>අන්තර්ක්‍රියාකාරී අධ්‍යාපනික ක්‍රීඩා</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="games-grid">
+                <!-- Tracing Game -->
+                <div class="game-card" id="tracing">
+                    <h3><i class="fas fa-pen-fancy"></i> අකුරු අඳින අභියෝගය</h3>
+                    <p>අකුරේදී අළු දළ සටහන එකට සමීපව අඳින්න — පූර්ණතාව % දක්වයි.</p>
+                    <canvas id="traceCanvas" width="300" height="300"></canvas>
+                    <div class="controls">
+                        <button class="btn" id="traceStartBtn">ආරම්භ</button>
+                        <button class="btn btn-warning" id="traceClearBtn">මකන්න</button>
+                        <button class="btn btn-success" id="traceNextBtn">ඊළඟ</button>
+                    </div>
+                    <div class="stats">පූර්ණතාව: <span id="traceAccuracy">0</span>%</div>
+                    <div class="message" id="traceMotivation" style="display: none;"></div>
+                </div>
+
+                <!-- Memory Game -->
+                <div class="game-card" id="memory">
+                    <h3><i class="fas fa-brain"></i> මතක ක්‍රීඩාව</h3>
+                    <p>දෙපැත්තේ සිටින කාඩ් 2 ක් අදාල අකුර සමඟ සමාන නම් තෝරන්න.</p>
+                    <div id="memoryGame" class="memory-grid"></div>
+                    <div class="controls">
+                        <button class="btn" id="memoryStartBtn">ආරම්භ කරන්න</button>
+                    </div>
+                    <div class="stats">නිවැරදි අනුපිළිවෙල: <span id="memoryAccuracy">0</span>%</div>
+                    <div class="message" id="memoryMotivation" style="display: none;"></div>
+                </div>
+
+                <!-- Vowel/Consonant Game -->
+                <div class="game-card" id="vowel-consonant">
+                    <h3><i class="fas fa-font"></i> ස්වර / ව්‍යංජන වර්ගීකරණය</h3>
+                    <p>ස්වර අකුරු පමණක් තෝරන්න.</p>
+                    <div id="vcGrid" class="grid-mini"></div>
+                    <div class="controls">
+                        <button class="btn" id="vcNewBtn">නව වටය</button>
+                        <button class="btn btn-warning" id="vcRevealBtn">පිළිතුරු පෙන්වන්න</button>
+                    </div>
+                    <div class="stats">නිවැරදි: <span id="vcCorrect">0</span> / <span id="vcTotal">0</span> | කාර්ය සාධනය: <span id="vcAcc">0%</span></div>
+                    <div class="message" id="vcMsg" style="display: none;"></div>
+                </div>
+
+                <!-- Voice Recording -->
+                <div class="game-card" id="voice-recording">
+                    <h3><i class="fas fa-microphone"></i> හඬ පටිගත කිරීම + පිටපත</h3>
+                    <p>REC → සිංහලෙන් කතා කරන්න → පිටපත ලබාගන්න.</p>
+                    <div class="voice-controls">
+                        <button class="btn" id="startRecBtn">▶️ ආරම්භ</button>
+                        <button class="btn btn-danger" id="stopRecBtn" disabled>⏹️ නවත්වන්න</button>
+                        <button class="btn btn-success" id="playRecBtn" disabled>🔊 Play</button>
+                        <button class="btn" id="downloadRecBtn" disabled>⬇️ Download</button>
+                    </div>
+                    <h4>📝 Transcript:</h4>
+                    <textarea id="transcript" rows="4" placeholder="පටිගත කිරීම ආරම්භ කරන්න..."></textarea>
+                    <audio id="recordedAudio" controls style="display: none;"></audio>
+                    <div class="stats">නිවැරදීම: <span id="voiceAcc">0%</span></div>
+                </div>
+
+                <!-- Speed Tap Game -->
+                <div class="game-card" id="speed-tap">
+                    <h3><i class="fas fa-bolt"></i> ක්ෂණික ක්‍රීඩාව</h3>
+                    <p>වෙලාවේදී ඉලක්ක අකුර ට්‍රයි කරන්න.</p>
+                    <div class="tap-target" id="tapTarget">අ</div>
+                    <div id="tapGrid" class="grid-mini"></div>
+                    <div class="controls">
+                        <button class="btn" id="tapStartBtn">ආරම්භ</button>
+                        <div class="timer">⏱️ <span id="tapTimer">20</span>s</div>
+                    </div>
+                    <div class="stats">ලකුණු: <span id="tapScore">0</span> | උත්සාහ: <span id="tapAttempts">0</span> | කාර්ය සාධනය: <span id="tapAcc">0%</span></div>
+                    <div class="message" id="tapMsg" style="display: none;"></div>
+                </div>
+
+                <!-- Data Export -->
+                <div class="game-card">
+                    <h3><i class="fas fa-chart-bar"></i> සමස්ත නිවැරදිභාවය & දත්ත</h3>
+                    <p>සමස්ත නිවැරදිභාවය: <b><span id="overallAccuracy">0</span>%</b></p>
+                    <div class="controls">
+                        <button class="btn" onclick="calculateOverall()">ගණනය කරන්න</button>
+                        <button class="btn btn-success" onclick="exportData()">⬇️ දත්ත බාගත කරන්න</button>
+                    </div>
+                    <div class="stats">
+                        <small style="color: #666;">දත්ත බ්‍රවුසරයේ දේශීයව සුරක්ෂිත වේ</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sinhala letters array
+        const sinhalaLetters = [
+            "අ","ආ","ඇ","ඈ","ඉ","ඊ","උ","ඌ","ඍ","ඎ","ඏ","ඐ","එ","ඒ","ඓ","ඔ","ඕ","ඖ",
+            "ක","ඛ","ග","ඝ","ඞ","ඟ","ච","ඡ","ජ","ඣ","ඤ","ඥ","ට","ඨ","ඩ","ඪ","ණ","ඬ",
+            "ත","ථ","ද","ධ","න","ඳ","ප","ඵ","බ","භ","ම","ඹ","ය","ර","ල","ව","ශ","ෂ","ස","හ","ළ","ෆ"
+        ];
+
+        // Vowels set
+        const vowels = new Set(["අ","ආ","ඇ","ඈ","ඉ","ඊ","උ","ඌ","ඍ","ඎ","ඏ","ඐ","එ","ඒ","ඓ","ඔ","ඕ","ඖ"]);
+
+        // Game state
+        let gameHistory = JSON.parse(localStorage.getItem("akuruMithuraHistory") || "[]");
+
+        // Save record function
+        function saveRecord(data) {
+            const currentStudent = JSON.parse(localStorage.getItem('currentStudent') || 'null');
+            const record = { 
+                timestamp: new Date().toLocaleString(), 
+                student: currentStudent ? currentStudent.name : '',
+                classroom: currentStudent ? currentStudent.classroomId : '',
+                ...data 
+            };
+            gameHistory.push(record);
+            localStorage.setItem("akuruMithuraHistory", JSON.stringify(gameHistory));
+        }
+
+        // Download data function
+        function downloadData() {
+            if (!gameHistory.length) {
+                alert("No history to export.");
+                return;
+            }
+            let csv = "Timestamp,Game,Attempts,Correct,Accuracy,Extra\n";
+            gameHistory.forEach(r => {
+                const extra = (r.extra || "").toString().replace(/"/g, '""');
+                csv += `"${r.timestamp}","${r.game}",${r.attempts || ""},${r.correct || ""},${r.accuracy || ""},"${extra}"\n`;
+            });
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "AkuruMithura_History.csv";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Calculate overall accuracy
+        function calculateOverall() {
+            const traceAcc = parseInt(document.getElementById("traceAccuracy").innerText) || 0;
+            const memAcc = parseInt(document.getElementById("memoryAccuracy").innerText) || 0;
+            const vcAcc = parseInt(document.getElementById("vcAcc").innerText) || 0;
+            const tapAcc = parseInt(document.getElementById("tapAcc").innerText) || 0;
+            const voiceAcc = parseInt(document.getElementById("voiceAcc").innerText) || 0;
+            const arr = [traceAcc, memAcc, vcAcc, tapAcc, voiceAcc].filter(a => !isNaN(a));
+            const overall = arr.length ? Math.round(arr.reduce((s, v) => s + v, 0) / arr.length) : 0;
+            document.getElementById("overallAccuracy").innerText = overall;
+        }
+
+        // Simple data export function
+        function exportData() {
+            if (!gameHistory.length) {
+                alert("බාගත කිරීමට දත්ත නොමැත");
+                return;
+            }
+            
+            // Create CSV content
+            let csv = "Timestamp,Classroom,Student,Game,Attempts,Correct,Accuracy,Extra\n";
+            gameHistory.forEach(r => {
+                const extra = (r.extra || "").toString().replace(/"/g, '""');
+                csv += `"${r.timestamp}","${r.classroom || ''}","${r.student || ''}","${r.game}",${r.attempts || ""},${r.correct || ""},${r.accuracy || ""},"${extra}"\n`;
+            });
+            
+            // Create blob and download
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `AkuruMithura_Data_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert("දත්ත බාගත කිරීම සාර්ථකයි! ඔබට අවශ්‍ය නම් Google Drive හි උඩුගත කරන්න.");
+        }
+
+        // Initialize all games when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initTracingGame();
+            initMemoryGame();
+            initVowelConsonantGame();
+            initVoiceRecording();
+            initSpeedTapGame();
+        });
+
+        // ===== TRACING GAME =====
+        function initTracingGame() {
+            const traceCanvas = document.getElementById("traceCanvas");
+            const ctx = traceCanvas.getContext("2d");
+            const maskCanvas = document.createElement("canvas");
+            maskCanvas.width = traceCanvas.width;
+            maskCanvas.height = traceCanvas.height;
+            const mctx = maskCanvas.getContext("2d");
+
+            let currentLetterIndex = 0;
+            let isDrawing = false, lastX = 0, lastY = 0, maskData = null, maskTotal = 0, coveredSet = new Set(), traceComplete = false;
+
+            function computeFontSize(letter) {
+                let size = 160;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                while (size > 30) {
+                    ctx.font = `${size}px Noto Sans Sinhala`;
+                    const w = ctx.measureText(letter).width;
+                    if (w <= traceCanvas.width * 0.78) break;
+                    size -= 4;
+                }
+                return size;
+            }
+
+            function buildMask(letter) {
+                mctx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+                const size = computeFontSize(letter);
+                mctx.font = `${size}px Noto Sans Sinhala`;
+                mctx.textAlign = "center";
+                mctx.textBaseline = "middle";
+                mctx.lineJoin = "round";
+                mctx.lineCap = "round";
+                mctx.lineWidth = 18;
+                mctx.strokeStyle = "#000";
+                mctx.strokeText(letter, maskCanvas.width / 2, maskCanvas.height / 2);
+                const img = mctx.getImageData(0, 0, maskCanvas.width, maskCanvas.height);
+                maskData = img.data;
+                maskTotal = 0;
+                for (let y = 0; y < maskCanvas.height; y++) {
+                    for (let x = 0; x < maskCanvas.width; x++) {
+                        const a = maskData[(y * maskCanvas.width + x) * 4 + 3];
+                        if (a > 0) maskTotal++;
+                    }
+                }
+                coveredSet.clear();
+                traceComplete = false;
+                updateTraceAccuracy(0);
+            }
+
+            function drawLetterOutline(letter) {
+                ctx.clearRect(0, 0, traceCanvas.width, traceCanvas.height);
+                const size = computeFontSize(letter);
+                ctx.font = `${size}px Noto Sans Sinhala`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.lineJoin = "round";
+                ctx.lineCap = "round";
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = "#cccccc";
+                ctx.strokeText(letter, traceCanvas.width / 2, traceCanvas.height / 2);
+            }
+
+            function updateTraceAccuracy(pct) {
+                document.getElementById("traceAccuracy").innerText = Math.min(100, Math.round(pct));
+            }
+
+            function startTracing() {
+                const letter = sinhalaLetters[currentLetterIndex];
+                drawLetterOutline(letter);
+                buildMask(letter);
+                document.getElementById("traceMotivation").style.display = "none";
+            }
+
+            function clearTracing() {
+                drawLetterOutline(sinhalaLetters[currentLetterIndex]);
+                buildMask(sinhalaLetters[currentLetterIndex]);
+                document.getElementById("traceMotivation").style.display = "none";
+            }
+
+            function nextTracing() {
+                currentLetterIndex = (currentLetterIndex + 1) % sinhalaLetters.length;
+                startTracing();
+            }
+
+            function coverAlongLine(x0, y0, x1, y1) {
+                const dx = x1 - x0, dy = y1 - y0;
+                const steps = Math.max(Math.abs(dx), Math.abs(dy));
+                if (steps === 0) return 0;
+                let newly = 0;
+                const sx = dx / steps, sy = dy / steps;
+                for (let i = 0; i <= steps; i++) {
+                    const x = Math.round(x0 + sx * i), y = Math.round(y0 + sy * i);
+                    if (x < 0 || y < 0 || x >= maskCanvas.width || y >= maskCanvas.height) continue;
+                    const idx = y * maskCanvas.width + x;
+                    const a = maskData[idx * 4 + 3];
+                    if (a > 0 && !coveredSet.has(idx)) {
+                        coveredSet.add(idx);
+                        newly++;
+                    }
+                }
+                return newly;
+            }
+
+            traceCanvas.addEventListener("mousedown", (e) => {
+                isDrawing = true;
+                lastX = e.offsetX;
+                lastY = e.offsetY;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+            });
+
+            traceCanvas.addEventListener("mousemove", (e) => {
+                if (!isDrawing || !maskData) return;
+                const x = e.offsetX, y = e.offsetY;
+                ctx.strokeStyle = "#0096c7";
+                ctx.lineWidth = 6;
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                coverAlongLine(lastX, lastY, x, y);
+                const pct = (coveredSet.size / maskTotal) * 100;
+                updateTraceAccuracy(pct);
+                if (!traceComplete && pct >= 80) {
+                    traceComplete = true;
+                    document.getElementById("traceMotivation").textContent = "ඉතා හොඳයි! 👏 80% ඉක්මවා ඇත.";
+                    document.getElementById("traceMotivation").className = "message success";
+                    document.getElementById("traceMotivation").style.display = "block";
+                    saveRecord({
+                        game: "tracing",
+                        attempts: 1,
+                        correct: (pct >= 80 ? 1 : 0),
+                        accuracy: Math.round(pct),
+                        extra: sinhalaLetters[currentLetterIndex]
+                    });
+                }
+                lastX = x;
+                lastY = y;
+            });
+
+            ["mouseup", "mouseout"].forEach(ev => traceCanvas.addEventListener(ev, () => {
+                isDrawing = false;
+                ctx.closePath();
+            }));
+
+            document.getElementById("traceStartBtn").addEventListener("click", startTracing);
+            document.getElementById("traceClearBtn").addEventListener("click", clearTracing);
+            document.getElementById("traceNextBtn").addEventListener("click", nextTracing);
+
+            startTracing();
+        }
+
+        // ===== MEMORY GAME =====
+        function initMemoryGame() {
+            const memoryGameEl = document.getElementById("memoryGame");
+            const memoryStartBtn = document.getElementById("memoryStartBtn");
+            let memoryState = { attempts: 0, correct: 0 };
+
+            function initMemoryGame() {
+                memoryGameEl.innerHTML = "";
+                const letters = ["අ", "ආ", "ක", "ග", "ත", "ද"];
+                const cards = [...letters, ...letters].sort(() => 0.5 - Math.random());
+                let flipped = [];
+                memoryState = { attempts: 0, correct: 0 };
+                document.getElementById("memoryMotivation").style.display = "none";
+                
+                cards.forEach((letter, idx) => {
+                    const card = document.createElement("div");
+                    card.className = "memory-card";
+                    card.dataset.letter = letter;
+                    card.innerHTML = `<div class="memory-card-inner"><div class="memory-card-front">❓</div><div class="memory-card-back">${letter}</div></div>`;
+                    card.addEventListener("click", () => {
+                        if (card.classList.contains("flipped") || flipped.length === 2) return;
+                        card.classList.add("flipped");
+                        flipped.push(card);
+                        if (flipped.length === 2) {
+                            memoryState.attempts++;
+                            const a = flipped[0].dataset.letter, b = flipped[1].dataset.letter;
+                            if (a === b) {
+                                memoryState.correct++;
+                                document.getElementById("memoryMotivation").textContent = "හොඳයි! 👏";
+                                document.getElementById("memoryMotivation").className = "message success";
+                                document.getElementById("memoryMotivation").style.display = "block";
+                                flipped = [];
+                            } else {
+                                document.getElementById("memoryMotivation").textContent = "නැවත උත්සාහ කරන්න!";
+                                document.getElementById("memoryMotivation").className = "message error";
+                                document.getElementById("memoryMotivation").style.display = "block";
+                                setTimeout(() => {
+                                    flipped.forEach(c => c.classList.remove("flipped"));
+                                    flipped = [];
+                                }, 900);
+                            }
+                            const acc = Math.round((memoryState.correct / memoryState.attempts) * 100) || 0;
+                            document.getElementById("memoryAccuracy").innerText = acc;
+                            saveRecord({
+                                game: "memory",
+                                attempts: memoryState.attempts,
+                                correct: memoryState.correct,
+                                accuracy: acc
+                            });
+                        }
+                    });
+                    memoryGameEl.appendChild(card);
+                });
+            }
+
+            memoryStartBtn.addEventListener("click", initMemoryGame);
+            initMemoryGame();
+        }
+
+        // ===== VOWEL/CONSONANT GAME =====
+        function initVowelConsonantGame() {
+            let vcCorrect = 0, vcTotal = 0;
+
+            function updateVCStats() {
+                const acc = vcTotal ? ((vcCorrect / vcTotal) * 100).toFixed(1) : 0;
+                document.getElementById("vcCorrect").innerText = vcCorrect;
+                document.getElementById("vcTotal").innerText = vcTotal;
+                document.getElementById("vcAcc").innerText = acc + "%";
+            }
+
+            function newVCRound() {
+                const holder = document.getElementById("vcGrid");
+                holder.innerHTML = "";
+                document.getElementById("vcMsg").style.display = "none";
+                const picks = [];
+                while (picks.length < 12) {
+                    picks.push(sinhalaLetters[Math.floor(Math.random() * sinhalaLetters.length)]);
+                }
+                picks.forEach(l => {
+                    const d = document.createElement("div");
+                    d.className = "tile";
+                    d.textContent = l;
+                    d.addEventListener("click", () => {
+                        vcTotal++;
+                        if (vowels.has(l)) {
+                            vcCorrect++;
+                            d.classList.add("correct");
+                            d.style.pointerEvents = "none";
+                            document.getElementById("vcMsg").textContent = "හොඳයි! 👏";
+                            document.getElementById("vcMsg").className = "message success";
+                            document.getElementById("vcMsg").style.display = "block";
+                        } else {
+                            d.classList.add("wrong");
+                            d.style.pointerEvents = "none";
+                            document.getElementById("vcMsg").textContent = "මෙය ව්‍යංජනයකි!";
+                            document.getElementById("vcMsg").className = "message error";
+                            document.getElementById("vcMsg").style.display = "block";
+                        }
+                        updateVCStats();
+                        saveRecord({
+                            game: "vowel-consonant",
+                            attempts: vcTotal,
+                            correct: vcCorrect,
+                            accuracy: Math.round((vcCorrect / vcTotal) * 100) || 0
+                        });
+                    });
+                    holder.appendChild(d);
+                });
+            }
+
+            function revealVC() {
+                document.querySelectorAll("#vcGrid .tile").forEach(n => {
+                    if (vowels.has(n.textContent)) n.classList.add("correct");
+                    else n.classList.add("wrong");
+                    n.style.pointerEvents = "none";
+                });
+            }
+
+            document.getElementById("vcNewBtn").addEventListener("click", newVCRound);
+            document.getElementById("vcRevealBtn").addEventListener("click", revealVC);
+            newVCRound();
+        }
+
+        // ===== VOICE RECORDING =====
+        function initVoiceRecording() {
+            const startRecBtn = document.getElementById("startRecBtn");
+            const stopRecBtn = document.getElementById("stopRecBtn");
+            const playRecBtn = document.getElementById("playRecBtn");
+            const downloadRecBtn = document.getElementById("downloadRecBtn");
+            const transcriptEl = document.getElementById("transcript");
+            const recordedAudio = document.getElementById("recordedAudio");
+            let mediaRecorder, audioChunks = [], audioBlob, audioUrl, recog;
+
+            async function startRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = e => {
+                        if (e.data && e.data.size > 0) audioChunks.push(e.data);
+                    };
+                    mediaRecorder.onstop = () => {
+                        audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+                        audioUrl = URL.createObjectURL(audioBlob);
+                        recordedAudio.src = audioUrl;
+                        recordedAudio.style.display = "block";
+                        playRecBtn.disabled = false;
+                        downloadRecBtn.disabled = false;
+                    };
+                    mediaRecorder.start();
+
+                    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    if (!SR) {
+                        transcriptEl.value = "❌ SpeechRecognition not supported in this browser. Use Chrome/Edge.";
+                    } else {
+                        recog = new SR();
+                        recog.lang = "si-LK";
+                        recog.continuous = true;
+                        recog.interimResults = true;
+                        recog.onresult = (e) => {
+                            let text = "";
+                            for (let i = 0; i < e.results.length; i++) {
+                                text += e.results[i][0].transcript + (e.results[i].isFinal ? "" : "");
+                            }
+                            transcriptEl.value = text.trim();
+                            const plain = text.replace(/\s+/g, "").replace(/[^\u0D80-\u0DFF]/g, "");
+                            if (plain.length > 0) {
+                                let correctChars = 0;
+                                for (let ch of plain) if (sinhalaLetters.includes(ch)) correctChars++;
+                                const acc = Math.round((correctChars / plain.length) * 100);
+                                document.getElementById("voiceAcc").innerText = acc + "%";
+                            }
+                        };
+                        recog.onerror = (ev) => { console.error("recog error", ev); };
+                        recog.start();
+                    }
+
+                    startRecBtn.disabled = true;
+                    stopRecBtn.disabled = false;
+                    transcriptEl.value = "🎙️ Recording... speak Sinhala";
+                } catch (err) {
+                    console.error("mic err", err);
+                    transcriptEl.value = "❌ Cannot access microphone.";
+                }
+            }
+
+            function stopRecording() {
+                if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+                if (recog) try { recog.stop(); } catch (e) { }
+                startRecBtn.disabled = false;
+                stopRecBtn.disabled = true;
+                const text = transcriptEl.value || "";
+                const plain = text.replace(/\s+/g, "").replace(/[^\u0D80-\u0DFF]/g, "");
+                const total = plain.length;
+                let correctChars = 0;
+                for (let ch of plain) if (sinhalaLetters.includes(ch)) correctChars++;
+                const acc = total ? Math.round((correctChars / total) * 100) : 0;
+                document.getElementById("voiceAcc").innerText = acc + "%";
+                saveRecord({
+                    game: "voice",
+                    attempts: 1,
+                    correct: correctChars,
+                    accuracy: acc,
+                    extra: text
+                });
+            }
+
+            startRecBtn.addEventListener("click", startRecording);
+            stopRecBtn.addEventListener("click", stopRecording);
+            playRecBtn.addEventListener("click", () => { if (recordedAudio.src) recordedAudio.play(); });
+            downloadRecBtn.addEventListener("click", () => {
+                if (!audioUrl) return;
+                const a = document.createElement("a");
+                a.href = audioUrl;
+                a.download = "recording.webm";
+                a.click();
+            });
+        }
+
+        // ===== SPEED TAP GAME =====
+        function initSpeedTapGame() {
+            let tapTime = 20, tapTimerId = null, tapRunning = false, tapScore = 0, tapAttempts = 0, currentTapTarget = "";
+
+            function randomChoices(n = 12) {
+                const arr = [];
+                for (let i = 0; i < n; i++) arr.push(sinhalaLetters[Math.floor(Math.random() * sinhalaLetters.length)]);
+                return arr;
+            }
+
+            function renderTapRound() {
+                currentTapTarget = sinhalaLetters[Math.floor(Math.random() * sinhalaLetters.length)];
+                document.getElementById("tapTarget").innerText = currentTapTarget;
+                const grid = document.getElementById("tapGrid");
+                grid.innerHTML = "";
+                const choices = randomChoices(12);
+                if (!choices.includes(currentTapTarget)) choices[Math.floor(Math.random() * choices.length)] = currentTapTarget;
+                choices.forEach(ch => {
+                    const t = document.createElement("div");
+                    t.className = "tile";
+                    t.textContent = ch;
+                    t.addEventListener("click", () => {
+                        if (!tapRunning) return;
+                        tapAttempts++;
+                        if (ch === currentTapTarget) {
+                            tapScore++;
+                            document.getElementById("tapMsg").textContent = "සුපිරි! ✅";
+                            document.getElementById("tapMsg").className = "message success";
+                            document.getElementById("tapMsg").style.display = "block";
+                        } else {
+                            document.getElementById("tapMsg").textContent = "අවාසනාවට 😅";
+                            document.getElementById("tapMsg").className = "message error";
+                            document.getElementById("tapMsg").style.display = "block";
+                        }
+                        updateTapStats();
+                        renderTapRound();
+                    });
+                    grid.appendChild(t);
+                });
+            }
+
+            function updateTapStats() {
+                document.getElementById("tapScore").innerText = tapScore;
+                document.getElementById("tapAttempts").innerText = tapAttempts;
+                const acc = tapAttempts ? ((tapScore / tapAttempts) * 100).toFixed(1) : 0;
+                document.getElementById("tapAcc").innerText = acc + "%";
+            }
+
+            function startTap() {
+                if (tapRunning) return;
+                tapRunning = true;
+                tapTime = 20;
+                tapScore = 0;
+                tapAttempts = 0;
+                document.getElementById("tapMsg").style.display = "none";
+                updateTapStats();
+                renderTapRound();
+                document.getElementById("tapTimer").innerText = tapTime;
+                tapTimerId = setInterval(() => {
+                    tapTime--;
+                    document.getElementById("tapTimer").innerText = tapTime;
+                    if (tapTime <= 0) {
+                        clearInterval(tapTimerId);
+                        tapRunning = false;
+                        document.getElementById("tapMsg").textContent = "කාලය අවසන්! 🏁";
+                        document.getElementById("tapMsg").className = "message error";
+                        document.getElementById("tapMsg").style.display = "block";
+                        const acc = tapAttempts ? Math.round((tapScore / tapAttempts) * 100) : 0;
+                        saveRecord({
+                            game: "tap",
+                            attempts: tapAttempts,
+                            correct: tapScore,
+                            accuracy: acc
+                        });
+                    }
+                }, 1000);
+            }
+
+            document.getElementById("tapStartBtn").addEventListener("click", startTap);
+        }
+    </script>
+</body>
+</html>
