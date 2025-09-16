@@ -1,609 +1,593 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>අකුරු මිතුරා</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root{--brand:#0077b6;--accent:#0096c7;--bg:#e0f7fa}
-  body{font-family:'Noto Sans Sinhala',sans-serif;margin:0;background:var(--bg);color:#023e8a}
-  header{background:var(--brand);color:#fff;padding:1rem;text-align:center;box-shadow:0 4px 6px rgba(0,0,0,.12)}
-  nav{display:flex;justify-content:center;background:#023e8a;flex-wrap:wrap}
-  nav a{color:#fff;padding:0.75rem 1rem;text-decoration:none}
-  nav a:hover{background:var(--accent);transform:scale(1.03)}
-  section{padding:2rem}
-  h1,h2{color:#023e8a}
-  .letters{display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:10px;margin-top:1rem}
-  .letter{font-size:2rem;text-align:center;background:#fff;border:2px solid var(--accent);border-radius:10px;padding:10px;cursor:pointer;transition:transform .15s}
-  .letter:hover{transform:scale(1.08);background:#caf0f8}
-  .game-dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
-  .game-card{background:linear-gradient(135deg,#f9f9f9,#e0f7fa);padding:1rem;border-radius:14px;box-shadow:0 6px 12px rgba(0,0,0,.08);min-height:280px}
-  canvas{border:1px solid var(--accent);border-radius:8px;background:white;width:100%;max-width:400px}
-  .trace-controls{display:flex;gap:.5rem;justify-content:center;margin-top:.5rem}
-  button{background:var(--brand);color:#fff;border:none;padding:.6rem 1rem;border-radius:8px;cursor:pointer}
-  button:hover{background:var(--accent)}
-  .motivation{color:green;font-weight:700;margin-top:.5rem}
-  .grid-mini{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-  .tile{background:var(--accent);color:#fff;border-radius:8px;padding:10px;text-align:center;cursor:pointer}
-  .tile.correct{background:#2a9d8f}
-  .tile.wrong{background:#e76f51}
-  .stats{margin-top:.5rem;font-weight:700}
-  footer{background:#023e8a;color:#fff;text-align:center;padding:1rem;margin-top:2rem}
-  /* memory styling */
-  .memory-grid{display:grid;grid-template-columns:repeat(4,90px);gap:12px;justify-content:center}
-  .memory-card{width:90px;height:100px;perspective:800px;cursor:pointer}
-  .memory-card-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
-  .memory-card.flipped .memory-card-inner{transform:rotateY(180deg)}
-  .memory-card-front,.memory-card-back{position:absolute;inset:0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;backface-visibility:hidden}
-  .memory-card-front{background:var(--accent);color:#fff}
-  .memory-card-back{background:#fff;border:2px solid var(--accent);transform:rotateY(180deg);color:#023e8a}
-  /* hidden admin */
-  #adminPanel{display:none}
-  /* responsive */
-  @media(max-width:760px){ .game-dashboard{grid-template-columns:1fr} .memory-grid{grid-template-columns:repeat(3,90px)} }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>අකුරු මිතුරා - මුල් පිටුව</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0077b6;
+            --secondary: #0096c7;
+            --accent: #023e8a;
+            --background: #e0f7fa;
+            --success: #2a9d8f;
+            --warning: #f77f00;
+            --danger: #e76f51;
+            --light: #ffffff;
+            --dark: #023e8a;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #f0f9ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--light);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+
+        /* Navigation */
+        nav {
+            background: var(--accent);
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: var(--light);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-section h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Game Cards Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .game-card {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .game-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .game-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .game-link {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,119,182,0.3);
+        }
+
+        .game-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,119,182,0.4);
+        }
+
+        /* Features Section */
+        .features-section {
+            background: var(--light);
+            padding: 3rem 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h4 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+/* FAQ */
+        .faq {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .faq h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .faq p {
+            margin-bottom: 1rem;
+            color: #444;
+        }
+
+        /* Feedback */
+        .feedback {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .feedback h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feedback form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .feedback label {
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .feedback input,
+        .feedback textarea {
+            padding: 0.7rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .feedback button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            border: none;
+            padding: 0.8rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .feedback button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,119,182,0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--accent);
+            color: var(--light);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1><i class="fas fa-pen-fancy"></i> අකුරු මිතුරා</h1>
+                <p class="subtitle">සිංහල අකුරු, වචන සහ ක්‍රීඩා - ඩිස්ග්‍රාෆියා සඳහා විශේෂිත</p>
+            </div>
+        </div>
+    </header>
 
-<audio id="successSound" src="sounds/success.mp3"></audio>
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <a href="#home" class="nav-link">
+                    <i class="fas fa-home"></i> මුල් පිටුව
+                </a>
+                <a href="teacher.html" class="nav-link">
+                    <i class="fas fa-chalkboard-teacher"></i> ගුරුවරුන්
+                </a>
+                <a href="student.html" class="nav-link">
+                    <i class="fas fa-user-graduate"></i> සිසුන්
+                </a>
+            </div>
+        </div>
+    </nav>
 
-<header>
-  <h1>✍️ අකුරු මිතුරා</h1>
-  <p>සිංහල අකුරු, වචන සහ ක්‍රීඩා</p>
-</header>
+    <main>
+        <div class="container">
+            <section class="welcome-section">
+                <h2>ආයුබෝවන්! 👋</h2>
+                <p>
+                    <strong>අරමුණ:</strong> "අකුරු මිතුරා" යනු <strong>ඩිස්ග්‍රාෆියා</strong> ඇති සිසුන්ට සිංහල භාෂාවෙන් ලිවීම සහ කියවීමේදී පහසුව සපයන අඩවියකි. 
+                    අපගේ අන්තර්ක්‍රියාකාරී ක්‍රීඩා සහ ක්‍රියාකාරකම් මගින් ඔබේ දරුවාගේ අකුරු හඳුනාගැනීම, ලිවීම සහ මතක ශක්තිය වැඩිදියුණු කරන්න.
+                </p>
+            </section>
 
-<nav>
-  <a href="#home">🏠 මුල් පිටුව</a>
-  <a href="#activities">🔡 ක්‍රියාකාරකම්</a>
-  <a href="#games">🎮 ක්‍රීඩා</a>
-  <a href="#howto">📖 භාවිතා</a>
-  <a href="#FAQs">❓ ප්‍රශ්න</a>
-  <a href="#feedback">📝 අදහස්</a>
-  <a href="#contact">📞 සම්බන්ධ</a>
-</nav>
+            <!-- Classroom Section -->
+            <section class="welcome-section" style="background: linear-gradient(135deg, #1a73e8, #34a853); color: white; margin-bottom: 3rem;">
+                <h2 style="color: white; margin-bottom: 1rem;">
+                    <i class="fas fa-chalkboard-teacher"></i> Classroom පද්ධතිය
+                </h2>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 2rem;">
+                    ගුරුවරුන්ට පන්ති කාමර සාදා සිසුන්ට ID ලබාදීමට හැකිය. සිසුන්ට පන්ති ID භාවිතා කර ලොගින් වීමට හැකිය.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="teacher.html" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.3);">
+                        <i class="fas fa-chalkboard-teacher"></i> ගුරුවරුන්
+                    </a>
+                    <a href="student.html" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.3);">
+                        <i class="fas fa-user-graduate"></i> සිසුන්
+                    </a>
+                </div>
+            </section>
 
-<section id="home">
-  <h2>මුල් පිටුව</h2>
-  <p><b>අරමුණ:</b> "අකුරු මිතුරා" යනු <b>ඩිස්ග්‍රාෆියා</b> ඇති සිසුන්ට සිංහල භාෂාවෙන් ලිවීම සහ කියවීමේදී පහසුව සපයන අඩවියකි.</p>
-</section>
+            <section class="games-grid">
+                <div class="game-card">
+                    <span class="game-icon">🔍</span>
+                    <h3>අකුරු සොයන්න</h3>
+                    <p>පෙන්වූ අකුර ජාලකය එකෙන් සොයා ක්ලික් කරන්න. මෙය අකුරු හඳුනාගැනීමේ හැකියාව වැඩිදියුණු කරයි.</p>
+                    <a href="activities.html#find-letter" class="game-link">
+                        <i class="fas fa-play"></i> ආරම්භ කරන්න
+                    </a>
+                </div>
 
-<!-- ACTIVITIES -->
-<section id="activities">
-  <h2>🔡 අකුරු සොයන්න</h2>
-  <p>පෙන්වූ අකුර ජාලකය එකෙන් සොයා ක්ලික් කරන්න.</p>
-  <h3>සොයන්න: <span id="targetLetter" style="font-size:2rem;color:#d62828"></span></h3>
-  <div class="letters" id="lettersGrid"></div>
-  <p id="activityMsg" class="motivation"></p>
-  <p class="stats"><b>නිවැරදි:</b> <span id="findScore">0</span> / <span id="findTotal">0</span> | <b>කාර්ය සාධනය:</b> <span id="findAccuracy">0%</span></p>
-  <button onclick="newTarget()">නව අකුරක්</button>
-</section>
+                <div class="game-card">
+                    <span class="game-icon">✍️</span>
+                    <h3>අකුරු අඳින අභියෝගය</h3>
+                    <p>අකුරේදී අළු දළ සටහන එකට සමීපව අඳින්න. පූර්ණතාව % දක්වයි.</p>
+                    <a href="games.html#tracing" class="game-link">
+                        <i class="fas fa-play"></i> ආරම්භ කරන්න
+                    </a>
+                </div>
 
-<!-- GAMES -->
-<section id="games">
-  <h2>🎮 ක්‍රීඩා පුවරුව</h2>
-  <div class="game-dashboard">
+                <div class="game-card">
+                    <span class="game-icon">🧠</span>
+                    <h3>මතක ක්‍රීඩාව</h3>
+                    <p>දෙපැත්තේ සිටින කාඩ් 2 ක් අදාල අකුර සමඟ සමාන නම් තෝරන්න.</p>
+                    <a href="games.html#memory" class="game-link">
+                        <i class="fas fa-play"></i> ආරම්භ කරන්න
+                    </a>
+                </div>
 
-    <!-- Tracing -->
-    <div class="game-card">
-      <h3>✍️ අකුරු අඳින අභියෝගය</h3>
-      <p>අකුරේදී අළු දළ සටහන එකට සමීපව අඳින්න — පූර්ණතාව % දක්වයි.</p>
-      <canvas id="traceCanvas" width="300" height="300"></canvas>
-      <div class="trace-controls">
-        <button id="traceStartBtn">ආරම්භ</button>
-        <button id="traceClearBtn">මකන්න</button>
-        <button id="traceNextBtn">ඊළඟ</button>
-      </div>
-      <p class="stats">පූර්ණතාව: <span id="traceAccuracy">0</span>%</p>
-      <p id="traceMotivation" class="motivation"></p>
-    </div>
+                <div class="game-card">
+                    <span class="game-icon">🅰️</span>
+                    <h3>ස්වර / ව්‍යංජන වර්ගීකරණය</h3>
+                    <p>12 අකුරු අතරින් ස්වර තෝරන්න. භාෂා ව්‍යාකරණ ඉගෙනීමට උදව් වේ.</p>
+                    <a href="games.html#vowel-consonant" class="game-link">
+                        <i class="fas fa-play"></i> ආරම්භ කරන්න
+                    </a>
+                </div>
 
-    <!-- Memory -->
-    <div class="game-card">
-  <h3>🧠 මතක ක්‍රීඩාව</h3>
-  <p>දෙපැත්තේ සිටින කාඩ් 2 ක් අදාල අකුර සමඟ සමාන නම් තෝරන්න.</p>
-  
-  <div id="memoryGame" class="memory-grid"></div>
-  
-  <div style="text-align:center; margin-top:0.6rem">
-    <button id="memoryStartBtn">ආරම්භ කරන්න</button>
-  </div>
-  
-  <p class="motivation" id="memoryMotivation"></p>
-  <p class="stats">නිවැරදි අනුපිළිවෙල: <span id="memoryAccuracy">0</span>%</p>
-</div>
-<script>
-(function(){
-  const memoryGrid = document.getElementById('memoryGame');
-  const startBtn = document.getElementById('memoryStartBtn');
-  const ACC_SPAN = document.getElementById('memoryAccuracy');
+                <div class="game-card">
+                    <span class="game-icon">⚡</span>
+                    <h3>ක්ෂණික ක්‍රීඩාව</h3>
+                    <p>වෙලාවේදී ඉලක්ක අකුර ට්‍රයි කරන්න. වේගය සහ නිරවද්‍යතාව වැඩිදියුණු කරයි.</p>
+                    <a href="games.html#speed-tap" class="game-link">
+                        <i class="fas fa-play"></i> ආරම්භ කරන්න
+                    </a>
+                </div>
 
-  function createCards(count = 12) {
-    memoryGrid.innerHTML = ''; // clear old cards
-    for (let i = 0; i < count; i++) {
-      const card = document.createElement('div');
-      card.className = 'memory-card';
-      card.dataset.index = i;
-      card.textContent = '?';
-      // attach events here if needed
-      memoryGrid.appendChild(card); // <-- correctly append INSIDE memoryGrid
-    }
-  }
+                <div class="game-card">
+                    <span class="game-icon">🎤</span>
+                    <h3>හඬ පටිගත කිරීම</h3>
+                    <p>සිංහලෙන් කතා කරන්න සහ ස්වයංක්‍රීය පිටපත ලබාගන්න.</p>
+                    <a href="games.html#voice-recording" class="game-link">
+                        <i class="fas fa-play"></i> ආරම්භ කරන්න
+                    </a>
+                </div>
+            </section>
 
-  startBtn.addEventListener('click', () => {
-    createCards(12);
-    ACC_SPAN.textContent = '0';
-  });
+            <section class="features-section">
+                <h2 style="text-align: center; color: var(--primary); margin-bottom: 1rem;">
+                    <i class="fas fa-star"></i> විශේෂාංග
+                </h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon">🎯</span>
+                        <h4>ඉලක්කගත අධ්‍යාපනය</h4>
+                        <p>ඩිස්ග්‍රාෆියා ඇති දරුවන් සඳහා විශේෂිතව නිර්මාණය කරන ලද</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <h4>ප්‍රගති ගණනය</h4>
+                        <p>සියලු ක්‍රියාකාරකම් සඳහා ස්වයංක්‍රීය ප්‍රගති ගණනය සහ වාර්තා</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💾</span>
+                        <h4>දත්ත සුරක්ෂිත කිරීම</h4>
+                        <p>සියලු ප්‍රගති දත්ත Google Drive හි ස්වයංක්‍රීයව සුරක්ෂිත වේ</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📱</span>
+                        <h4>ජංගම උපාංග සහය</h4>
+                        <p>සියලු උපාංගවල හොඳින් ක්‍රියා කරයි</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+            <!-- FAQ -->
+            <section id="faq" class="faq">
+                <h2>❓ ප්‍රශ්න</h2>
+                <p><b>මගේ දරුවාට මේ අඩවියෙන් කුමක් සොයාගත හැක?</b> අකුරු හඳුනාගැනීම, අකුරු අඳින අභ්‍යාස, මතක ක්‍රීඩා, හා වර්ගීකරණ/වේග ක්‍රීඩා.</p>
+                <p><b>මෙම අඩවිය භාවිතා කිරීමට අමතර මෘදුකාංග අවශ්‍යද?</b> නැහැ, ඔබේ බ්‍රවුසරය එකෙන්ම මේ අඩවිය භාවිතා කළ හැක.</p>
+                <p><b>මෙම අඩවිය මොනවද උදව් කරන දරුවන්ට?</b> විශේෂයෙන්ම <b>ඩිස්ග්‍රාෆියා</b> සහ අකුරු ලිවීමේ අපහසුතා ඇති දරුවන්ට, නමුත් ඕනෑම ළමුන්ට අකුරු හඳුනාගැනීමේ සහ මතක පුහුණුවේ උදව් වේ.</p>
+            </section>
 
-  // create initial grid automatically
-  createCards(12);
-})();
+            <!-- Feedback -->
+            <section id="feedback" class="feedback">
+                <h2>📝 අදහස්</h2>
+                <form id="feedbackForm">
+                    <label>නම:</label><input type="text" id="name" required>
+                    <label>ඊමේල්:</label><input type="email" id="email" required>
+                    <label>අදහස්:</label><textarea id="message" rows="4" required></textarea>
+                    <button type="submit">යවන්න</button>
+                </form>
+                <p id="feedbackMsg" style="color:green;font-weight:bold;text-align:center;"></p>
+            </section>
+        </div>
+    </main>
+    <script>
+document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        message: document.getElementById("message").value
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbwxDbYQNSikrmJSLRR3iyJtqwMY5OvslaWJ2OZacZDnebKlz__hvxeDytOGzjXGQP_kyQ/exec", {
+        method: "POST",
+        mode: "no-cors", // prevents CORS issues
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(() => {
+        alert("✅ Feedback submitted successfully!");
+        document.getElementById("feedbackForm").reset();
+    })
+    .catch(err => alert("❌ Error: " + err));
+});
 </script>
 
-    <!-- Vowel/Consonant -->
-    <div class="game-card">
-      <h3>🅰️ ස්වර / ව්‍යංජන වර්ගීකරණය</h3>
-      <p>ස්වර අකුරු පමණක් තෝරන්න.</p>
-      <div id="vcGrid" class="grid-mini" style="margin-top:10px"></div>
-      <div style="display:flex;gap:8px;justify-content:center;margin-top:.6rem">
-        <button id="vcNewBtn">නව වටය</button>
-        <button id="vcRevealBtn">පිළිතුරු පෙන්වන්න</button>
-      </div>
-      <p class="stats">නිවැරදි: <span id="vcCorrect">0</span> / <span id="vcTotal">0</span> | කාර්ය සාධනය: <span id="vcAcc">0%</span></p>
-      <p id="vcMsg" class="motivation"></p>
-    </div>
 
-    <!-- Voice Recorder + Transcript -->
-    <div class="game-card">
-      <h3>🎤 හඬ පටිගත කිරීම + පිටපත </h3>
-      <p>REC → සිංහලෙන් කතා කරන්න → පිටපත ලබාගන්න.</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
-        <button id="startRecBtn">▶️ ආරම්භ</button>
-        <button id="stopRecBtn" disabled>⏹️ නවත්වන්න</button>
-        <button id="playRecBtn" disabled>🔊 Play</button>
-        <button id="downloadRecBtn" disabled>⬇️ Download</button>
-      </div>
-      <h4>📝 Transcript:</h4>
-      <textarea id="transcript" rows="6" style="width:100%;border:1px solid var(--accent);border-radius:6px;padding:8px"></textarea>
-      <audio id="recordedAudio" controls style="width:100%;margin-top:8px"></audio>
-      <p class="stats">නිවැරදීම: <span id="voiceAcc">0%</span></p>
-    </div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 අකුරු මිතුරා | ළමුන් සඳහා හිතකාමී අධ්‍යාපනික අඩවිය</p>
+            <p style="margin-top: 0.5rem; opacity: 0.8;">
+                <i class="fas fa-phone"></i> 070 422 6267 | 
+                <i class="fas fa-envelope"></i> support@writeease.lk
+            </p>
+        </div>
+    </footer>
 
-    <!-- Speed Tap -->
-    <div class="game-card">
-      <h3>⚡ක්ෂණික ක්‍රීඩාව</h3>
-      <p>වෙලාවේදී ඉලක්ක අකුර ට්‍රයි කරන්න.</p>
-      <p>ඉලක්කය: <span id="tapTarget" style="font-size:1.6rem;color:#d62828"></span></p>
-      <div id="tapGrid" class="grid-mini" style="margin-top:8px"></div>
-      <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-top:.6rem">
-        <button id="tapStartBtn">ආරම්භ</button>
-        <div>⏱️ <span id="tapTimer">20</span>s</div>
-      </div>
-      <p class="stats">ලකුණු: <span id="tapScore">0</span> | උත්සාහ: <span id="tapAttempts">0</span> | කාර්ය සාධනය: <span id="tapAcc">0%</span></p>
-      <p id="tapMsg" class="motivation"></p>
-    </div>
+    <script>
+        // Feedback form
+        document.getElementById('feedbackForm').addEventListener('submit',function(e){
+            e.preventDefault();
+            document.getElementById('feedbackMsg').textContent="✅ ඔබේ අදහස් සාර්ථකව යවා ඇත!";
+            this.reset();
+        });
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
 
-    <!-- Summary + Data Export -->
-    <div class="game-card">
-      <h3>📊 සමස්ත නිවැරදිභාවය & දත්ත</h3>
-      <p>සමස්ත නිවැරදිභාවය: <b><span id="overallAccuracy">0</span>%</b></p>
-      <div style="display:flex;gap:8px;flex-direction:column;align-items:center;margin-top:10px">
-        <button onclick="calculateOverall()">ගණනය කරන්න</button>
-        <button onclick="downloadData()">⬇️ දත්ත (CSV) බාගත කරන්න</button>
-        <small style="color:#023e8a;margin-top:8px">(data stored locally in browser)</small>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- how to -->
-<section id="howto" class="howto">
-  <h2>📖 භාවිතා කරන අයුරු</h2>
-  <ol>
-    <li>🔡 <b>අකුරු සොයන්න</b> → පෙන්වන අකුර ජාලකය එකෙන් සොයා ක්ලික් කරන්න. ලකුණු සහ % දර්ශනය වේ.</li>
-    <li>✍️ <b>අකුරු අඳින අභියෝගය</b> → තිරයේ අළු දළ සටහන මත අඳින විට පූර්ණතාව % වැඩේ. 80% ඉක්මවීමේදී 👏.</li>
-    <li>🧠 <b>මතක ක්‍රීඩාව</b> → සමාන අකුරු යුගල සොයාගන්න.</li>
-    <li>🅰️ <b>ස්වර/ව්‍යංජන</b> → 12 අකුරු අතරින් ස්වර තෝරන්න.</li>
-    <li>⚡ <b>කඩිනම් ක්ලික්</b> → 20s ඇතුළත ඉලක්ක අකුරක් වේගයෙන් තෝරන්න.</li>
-    <li>🎤 <b>Voice</b> → මයික් ඔනෑම වෙලේම භාවිතා කරන්න; බ්‍රවුසරය කථන හඳුනාගැනීම සහ මාධ්ය වාර්තා සහතික කරන්න (Chrome/Edge).</li>
-  </ol>
-</section>
-
-<!-- FAQ -->
-<section id="FAQs" class="FAQs">
-  <h2>❓ ප්‍රශ්න</h2>
-  <p><b>මගේ දරුවාට මේ අඩවියෙන් කුමක් සොයාගත හැක?</b> අකුරු හඳුනාගැනීම, අකුරු අඳින අභ්‍යාස, මතක ක්‍රීඩා, හා වර්ගීකරණ/වේග ක්‍රීඩා.</p>
-  <p><b>මෙම අඩවිය භාවිතා කිරීමට අමතර මෘදුකාංග අවශ්‍යද?</b> නැහැ, ඔබේ බ්රවුසරයෙන්ම මේ අඩවිය භාවිතා කළ හැක. (ඒත් Voice features සඳහා Chrome/Edge සුදුසු වේ.)</p>
-  <p><b>මෙම අඩවිය සහාය කරන දරුවන්</b> විශේෂයෙන්ම <b>ඩිස්ග්‍රාෆියා</b> සහ අකුරු ලිවීමේ අපහසුතා ඇති දරුවන්ට, නමුත් ඕනෑම ළමයෙක්ටම උදව් වේ.</p>
-</section>
-
-<!-- Feedback -->
-<section id="feedback" class="feedback">
-  <h2>📝 අදහස්</h2>
-  <form id="feedbackForm">
-    <label>නම:</label><input type="text" id="name" required style="width:100%;padding:8px;border:1px solid var(--accent);border-radius:6px">
-    <label>ඊමේල්:</label><input type="email" id="email" required style="width:100%;padding:8px;border:1px solid var(--accent);border-radius:6px">
-    <label>අදහස්:</label><textarea id="message" rows="4" required style="width:100%;padding:8px;border:1px solid var(--accent);border-radius:6px"></textarea>
-    <button type="submit">යවන්න</button>
-  </form>
-  <p id="feedbackMsg" style="color:green;font-weight:700"></p>
-</section>
-
-<!-- Contact -->
-<section id="contact">
-  <h2>📞 සම්බන්ධ වීම</h2>
-  <p>📞 070 422 6267</p>
-  <p>✉️ support@writeease.lk</p>
-</section>
-
-<footer>
-  <p>© 2025 අකුරු මිතුරා | ළමුන් සඳහා හිතකාමී අධ්‍යාපනික අඩවිය</p>
-</footer>
-
-<!-- Hidden admin panel (not visible to normal users). You can unhide with CSS for admin access.) -->
-<div id="adminPanel" aria-hidden="true">
-  <button onclick="downloadData()">Download CSV (admin)</button>
-</div>
-
-<script>
-/* ===== Shared data & helpers ===== */
-const sinhalaLetters = ["අ","ආ","ඇ","ඈ","ඉ","ඊ","උ","ඌ","ඍ","ඎ","ඏ","ඐ","එ","ඒ","ඓ","ඔ","ඕ","ඖ",
-  "ක","ඛ","ග","ඝ","ඞ","ඟ","ච","ඡ","ජ","ඣ","ඤ","ඥ","ට","ඨ","ඩ","ඪ","ණ","ඬ",
-  "ත","ථ","ද","ධ","න","ඳ","ප","ඵ","බ","භ","ම","ඹ","ය","ර","ල","ව","ශ","ෂ","ස","හ","ළ","ෆ"];
-
-/* local data store */
-let gameHistory = JSON.parse(localStorage.getItem("akuruMithuraHistory") || "[]");
-function saveRecord(data){
-  const record = { timestamp: new Date().toLocaleString(), ...data };
-  gameHistory.push(record);
-  localStorage.setItem("akuruMithuraHistory", JSON.stringify(gameHistory));
-}
-/* export helper */
-function downloadData(){
-  if(!gameHistory.length){ alert("No history to export."); return; }
-  let csv = "Timestamp,Game,Attempts,Correct,Accuracy,Extra\n";
-  gameHistory.forEach(r=>{
-    const extra = (r.extra||"").toString().replace(/"/g,'""');
-    csv += `"${r.timestamp}","${r.game}",${r.attempts||""},${r.correct||""},${r.accuracy||""},"${extra}"\n`;
-  });
-  const blob = new Blob([csv], {type:"text/csv"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = "AkuruMithura_History.csv"; a.click();
-  URL.revokeObjectURL(url);
-}
-function getAllHistory(){ return gameHistory; } // accessible in console
-
-/* ===== Activities: Find the letter ===== */
-const lettersGrid = document.getElementById("lettersGrid");
-const targetLetterEl = document.getElementById("targetLetter");
-const activityMsg = document.getElementById("activityMsg");
-let findCorrect=0, findTotal=0;
-function updateFindStats(){
-  document.getElementById("findScore").innerText = findCorrect;
-  document.getElementById("findTotal").innerText = findTotal;
-  const acc = findTotal ? ((findCorrect/findTotal)*100).toFixed(1) : 0;
-  document.getElementById("findAccuracy").innerText = acc + "%";
-}
-function newTarget(){
-  targetLetterEl.textContent = sinhalaLetters[Math.floor(Math.random()*sinhalaLetters.length)];
-  activityMsg.textContent = "";
-}
-sinhalaLetters.forEach(l=>{
-  const d=document.createElement("div"); d.className="letter"; d.textContent=l;
-  d.onclick=()=>{
-    findTotal++;
-    if(d.textContent === targetLetterEl.textContent){
-      findCorrect++; activityMsg.textContent = "හොඳයි! 👏 නිවැරදියි.";
-      document.getElementById("successSound")?.play();
-      newTarget();
-    } else {
-      activityMsg.textContent = "නැවත උත්සාහ කරන්න!";
-    }
-    updateFindStats();
-    // save a small record for activity
-    saveRecord({game:"find-letter", attempts: findTotal, correct: findCorrect, accuracy: ((findTotal)?Math.round((findCorrect/findTotal)*100):0)});
-  };
-  lettersGrid.appendChild(d);
-});
-newTarget(); updateFindStats();
-
-/* ===== Tracing Game (mask-based) ===== */
-const traceCanvas = document.getElementById("traceCanvas");
-const ctx = traceCanvas.getContext("2d");
-const maskCanvas = document.createElement("canvas");
-maskCanvas.width = traceCanvas.width; maskCanvas.height = traceCanvas.height;
-const mctx = maskCanvas.getContext("2d");
-
-let currentLetterIndex = 0;
-let isDrawing=false,lastX=0,lastY=0,maskData=null,maskTotal=0,coveredSet=new Set(),traceComplete=false;
-
-function computeFontSize(letter){
-  let size=160; ctx.textAlign="center"; ctx.textBaseline="middle";
-  while(size>30){
-    ctx.font = `${size}px Noto Sans Sinhala`;
-    const w = ctx.measureText(letter).width;
-    if(w <= traceCanvas.width*0.78) break;
-    size -= 4;
-  }
-  return size;
-}
-function buildMask(letter){
-  mctx.clearRect(0,0,maskCanvas.width, maskCanvas.height);
-  const size = computeFontSize(letter);
-  mctx.font = `${size}px Noto Sans Sinhala`;
-  mctx.textAlign="center"; mctx.textBaseline="middle";
-  mctx.lineJoin="round"; mctx.lineCap="round"; mctx.lineWidth = 18; mctx.strokeStyle = "#000";
-  mctx.strokeText(letter, maskCanvas.width/2, maskCanvas.height/2);
-  const img = mctx.getImageData(0,0,maskCanvas.width,maskCanvas.height);
-  maskData = img.data; maskTotal=0;
-  for(let y=0;y<maskCanvas.height;y++){
-    for(let x=0;x<maskCanvas.width;x++){
-      const a = maskData[(y*maskCanvas.width + x)*4 + 3];
-      if(a>0) maskTotal++;
-    }
-  }
-  coveredSet.clear(); traceComplete=false; updateTraceAccuracy(0);
-}
-function drawLetterOutline(letter){
-  ctx.clearRect(0,0,traceCanvas.width,traceCanvas.height);
-  const size = computeFontSize(letter);
-  ctx.font = `${size}px Noto Sans Sinhala`;
-  ctx.textAlign="center"; ctx.textBaseline="middle";
-  ctx.lineJoin="round"; ctx.lineCap="round"; ctx.lineWidth = 3; ctx.strokeStyle = "#cccccc";
-  ctx.strokeText(letter, traceCanvas.width/2, traceCanvas.height/2);
-}
-function updateTraceAccuracy(pct){ document.getElementById("traceAccuracy").innerText = Math.min(100, Math.round(pct)); }
-
-function startTracing(){
-  const letter = sinhalaLetters[currentLetterIndex];
-  drawLetterOutline(letter); buildMask(letter);
-  document.getElementById("traceMotivation").textContent = "";
-  // clear drawn strokes area by drawing outline then return
-}
-function clearTracing(){ drawLetterOutline(sinhalaLetters[currentLetterIndex]); buildMask(sinhalaLetters[currentLetterIndex]); document.getElementById("traceMotivation").textContent=""; }
-function nextTracing(){ currentLetterIndex=(currentLetterIndex+1)%sinhalaLetters.length; startTracing(); }
-
-function coverAlongLine(x0,y0,x1,y1){
-  const dx=x1-x0, dy=y1-y0; const steps = Math.max(Math.abs(dx), Math.abs(dy));
-  if(steps===0) return 0;
-  let newly=0; const sx=dx/steps, sy=dy/steps;
-  for(let i=0;i<=steps;i++){
-    const x=Math.round(x0 + sx*i), y=Math.round(y0 + sy*i);
-    if(x<0||y<0||x>=maskCanvas.width||y>=maskCanvas.height) continue;
-    const idx = y*maskCanvas.width + x; const a = maskData[idx*4 + 3];
-    if(a>0 && !coveredSet.has(idx)){ coveredSet.add(idx); newly++; }
-  }
-  return newly;
-}
-
-traceCanvas.addEventListener("mousedown",(e)=>{ isDrawing=true; lastX=e.offsetX; lastY=e.offsetY; ctx.beginPath(); ctx.moveTo(lastX,lastY); });
-traceCanvas.addEventListener("mousemove",(e)=>{
-  if(!isDrawing||!maskData) return;
-  const x=e.offsetX, y=e.offsetY;
-  ctx.strokeStyle="#0096c7"; ctx.lineWidth=6; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.lineTo(x,y); ctx.stroke();
-  coverAlongLine(lastX,lastY,x,y);
-  const pct = (coveredSet.size / maskTotal) * 100;
-  updateTraceAccuracy(pct);
-  if(!traceComplete && pct >= 80){
-    traceComplete=true;
-    document.getElementById("traceMotivation").textContent = "ඉතා හොඳයි! 👏 80% ඉක්මවා ඇත.";
-    document.getElementById("successSound")?.play();
-    // save trace result
-    saveRecord({game:"tracing", attempts:1, correct: (pct>=80?1:0), accuracy: Math.round(pct), extra: sinhalaLetters[currentLetterIndex]});
-  }
-  lastX=x; lastY=y;
-});
-["mouseup","mouseout"].forEach(ev => traceCanvas.addEventListener(ev, ()=>{ isDrawing=false; ctx.closePath(); }));
-
-document.getElementById("traceStartBtn").addEventListener("click", startTracing);
-document.getElementById("traceClearBtn").addEventListener("click", clearTracing);
-document.getElementById("traceNextBtn").addEventListener("click", nextTracing);
-
-/* initialize tracing first letter */
-startTracing();
-
-/* ===== Memory Game (two-sided matching) ===== */
-const memoryGameEl = document.getElementById("memoryGame");
-const memoryStartBtn = document.getElementById("memoryStartBtn");
-let memoryState = {attempts:0, correct:0};
-function initMemoryGame(){
-  memoryGameEl.innerHTML = "";
-  const letters = ["අ","ආ","ක","ග","ත","ද"]; // pairs
-  const cards = [...letters, ...letters].sort(()=>0.5-Math.random());
-  let flipped=[];
-  memoryState = {attempts:0, correct:0};
-  document.getElementById("memoryMotivation").innerText = "";
-  cards.forEach((letter, idx)=>{
-    const card = document.createElement("div"); card.className="memory-card";
-    card.dataset.letter = letter;
-    card.innerHTML = `<div class="memory-card-inner"><div class="memory-card-front">❓</div><div class="memory-card-back">${letter}</div></div>`;
-    card.addEventListener("click", () => {
-      if(card.classList.contains("flipped") || flipped.length===2) return;
-      card.classList.add("flipped"); flipped.push(card);
-      if(flipped.length===2){
-        memoryState.attempts++;
-        const a = flipped[0].dataset.letter, b = flipped[1].dataset.letter;
-        if(a === b){
-          memoryState.correct++; document.getElementById("memoryMotivation").innerText = "හොඳයි! 👏"; flipped=[];
-        } else {
-          document.getElementById("memoryMotivation").innerText = "නැවත උත්සාහ කරන්න!";
-          setTimeout(()=>{ flipped.forEach(c=>c.classList.remove("flipped")); flipped=[]; }, 900);
-        }
-        const acc = Math.round((memoryState.correct / memoryState.attempts)*100) || 0;
-        document.getElementById("memoryAccuracy").innerText = acc;
-        // save a record (each round)
-        saveRecord({game:"memory", attempts: memoryState.attempts, correct: memoryState.correct, accuracy: acc});
-      }
-    });
-    memoryGameEl.appendChild(card);
-  });
-}
-memoryStartBtn.addEventListener("click", initMemoryGame);
-
-/* ===== Vowel / Consonant ===== */
-const vowels = new Set(["අ","ආ","ඇ","ඈ","ඉ","ඊ","උ","ඌ","ඍ","ඎ","ඏ","ඐ","එ","ඒ","ඓ","ඔ","ඕ","ඖ"]);
-let vcCorrect=0, vcTotal=0;
-function updateVCStats(){ const acc = vcTotal? ((vcCorrect/vcTotal)*100).toFixed(1):0; document.getElementById("vcCorrect").innerText=vcCorrect; document.getElementById("vcTotal").innerText=vcTotal; document.getElementById("vcAcc").innerText=acc+"%"; }
-function newVCRound(){
-  const holder = document.getElementById("vcGrid"); holder.innerHTML=""; document.getElementById("vcMsg").textContent="";
-  const picks=[];
-  while(picks.length<12){ picks.push(sinhalaLetters[Math.floor(Math.random()*sinhalaLetters.length)]); }
-  picks.forEach(l=>{
-    const d = document.createElement("div"); d.className="tile"; d.textContent=l;
-    d.addEventListener("click", ()=>{
-      vcTotal++;
-      if(vowels.has(l)){ vcCorrect++; d.classList.add("correct"); d.style.pointerEvents="none"; document.getElementById("vcMsg").innerText = "හොඳයි! 👏"; document.getElementById("successSound")?.play(); }
-      else { d.classList.add("wrong"); d.style.pointerEvents="none"; document.getElementById("vcMsg").innerText = "මෙය ව්‍යංජනයකි!"; }
-      updateVCStats();
-      saveRecord({game:"vowel-consonant", attempts: vcTotal, correct: vcCorrect, accuracy: Math.round((vcCorrect/vcTotal)*100) || 0});
-    });
-    holder.appendChild(d);
-  });
-}
-function revealVC(){ document.querySelectorAll("#vcGrid .tile").forEach(n=>{ if(vowels.has(n.textContent)) n.classList.add("correct"); else n.classList.add("wrong"); n.style.pointerEvents="none"; }); }
-document.getElementById("vcNewBtn").addEventListener("click", newVCRound);
-document.getElementById("vcRevealBtn").addEventListener("click", revealVC);
-newVCRound();
-
-/* ===== Speed Tap (fixed) ===== */
-let tapTime = 20, tapTimerId=null, tapRunning=false, tapScore=0, tapAttempts=0, currentTapTarget="";
-function randomChoices(n=12){ const arr=[]; for(let i=0;i<n;i++) arr.push(sinhalaLetters[Math.floor(Math.random()*sinhalaLetters.length)]); return arr; }
-function renderTapRound(){
-  currentTapTarget = sinhalaLetters[Math.floor(Math.random()*sinhalaLetters.length)];
-  document.getElementById("tapTarget").innerText = currentTapTarget;
-  const grid = document.getElementById("tapGrid"); grid.innerHTML="";
-  const choices = randomChoices(12);
-  if(!choices.includes(currentTapTarget)) choices[Math.floor(Math.random()*choices.length)] = currentTapTarget;
-  choices.forEach(ch=>{
-    const t = document.createElement("div"); t.className="tile"; t.textContent=ch;
-    t.addEventListener("click", ()=>{
-      if(!tapRunning) return;
-      tapAttempts++;
-      if(ch===currentTapTarget){ tapScore++; document.getElementById("tapMsg").innerText = "සුපිරි! ✅"; document.getElementById("successSound")?.play(); }
-      else document.getElementById("tapMsg").innerText = "අවාසනාවට 😅";
-      updateTapStats();
-      renderTapRound();
-    });
-    grid.appendChild(t);
-  });
-}
-function updateTapStats(){ document.getElementById("tapScore").innerText = tapScore; document.getElementById("tapAttempts").innerText = tapAttempts; const acc = tapAttempts? ((tapScore/tapAttempts)*100).toFixed(1):0; document.getElementById("tapAcc").innerText = acc + "%"; }
-function startTap(){
-  if(tapRunning) return;
-  tapRunning=true; tapTime=20; tapScore=0; tapAttempts=0; document.getElementById("tapMsg").innerText="";
-  updateTapStats(); renderTapRound(); document.getElementById("tapTimer").innerText = tapTime;
-  tapTimerId = setInterval(()=>{
-    tapTime--; document.getElementById("tapTimer").innerText = tapTime;
-    if(tapTime<=0){ clearInterval(tapTimerId); tapRunning=false; document.getElementById("tapMsg").innerText = "කාලය අවසන්! 🏁"; const acc = tapAttempts? Math.round((tapScore/tapAttempts)*100):0; saveRecord({game:"tap", attempts:tapAttempts, correct:tapScore, accuracy: acc}); }
-  },1000);
-}
-document.getElementById("tapStartBtn").addEventListener("click", startTap);
-
-/* ===== Voice record + SpeechRecognition + transcript & accuracy ===== */
-const startRecBtn = document.getElementById("startRecBtn"), stopRecBtn = document.getElementById("stopRecBtn");
-const playRecBtn = document.getElementById("playRecBtn"), downloadRecBtn = document.getElementById("downloadRecBtn");
-const transcriptEl = document.getElementById("transcript"), recordedAudio = document.getElementById("recordedAudio");
-let mediaRecorder, audioChunks=[], audioBlob, audioUrl, recog;
-
-async function startRecording(){
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    mediaRecorder = new MediaRecorder(stream);
-    audioChunks=[];
-    mediaRecorder.ondataavailable = e=>{ if(e.data && e.data.size>0) audioChunks.push(e.data); };
-    mediaRecorder.onstop = ()=>{ audioBlob = new Blob(audioChunks,{type:"audio/webm"}); audioUrl = URL.createObjectURL(audioBlob); recordedAudio.src = audioUrl; playRecBtn.disabled = false; downloadRecBtn.disabled=false; };
-    mediaRecorder.start();
-
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SR){ transcriptEl.value = "❌ SpeechRecognition not supported in this browser. Use Chrome/Edge."; }
-    else {
-      recog = new SR();
-      recog.lang = "si-LK"; recog.continuous = true; recog.interimResults = true;
-      recog.onresult = (e) => {
-        let text = "";
-        for(let i=0;i<e.results.length;i++){
-          text += e.results[i][0].transcript + (e.results[i].isFinal ? "" : "");
-        }
-        transcriptEl.value = text.trim();
-        // compute accuracy
-        const plain = text.replace(/\s+/g,"").replace(/[^\u0D80-\u0DFF]/g,"");
-        if(plain.length>0){
-          let correctChars=0;
-          for(let ch of plain) if(sinhalaLetters.includes(ch)) correctChars++;
-          const acc = Math.round((correctChars/plain.length)*100);
-          document.getElementById("voiceAcc").innerText = acc + "%";
-        }
-      };
-      recog.onerror = (ev)=>{ console.error("recog error", ev); };
-      recog.start();
-    }
-
-    startRecBtn.disabled = true; stopRecBtn.disabled = false;
-    transcriptEl.value = "🎙️ Recording... speak Sinhala";
-  }catch(err){
-    console.error("mic err",err); transcriptEl.value = "❌ Cannot access microphone.";
-  }
-}
-function stopRecording(){
-  if(mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
-  if(recog) try{ recog.stop(); }catch(e){}
-  startRecBtn.disabled=false; stopRecBtn.disabled=true;
-  // compute final accuracy & save
-  const text = transcriptEl.value || "";
-  const plain = text.replace(/\s+/g,"").replace(/[^\u0D80-\u0DFF]/g,"");
-  const total = plain.length;
-  let correctChars=0; for(let ch of plain) if(sinhalaLetters.includes(ch)) correctChars++;
-  const acc = total? Math.round((correctChars/total)*100):0;
-  document.getElementById("voiceAcc").innerText = acc + "%";
-  // save record
-  saveRecord({game:"voice", attempts:1, correct: correctChars, accuracy: acc, extra: text});
-}
-startRecBtn.addEventListener("click", startRecording);
-stopRecBtn.addEventListener("click", stopRecording);
-playRecBtn.addEventListener("click", ()=>{ if(recordedAudio.src) recordedAudio.play(); });
-downloadRecBtn.addEventListener("click", ()=>{ if(!audioUrl) return; const a=document.createElement("a"); a.href=audioUrl; a.download="recording.webm"; a.click(); });
-
-/* ===== Feedback form ===== */
-document.getElementById("feedbackForm").addEventListener("submit", function(e){
-  e.preventDefault();
-  document.getElementById("feedbackMsg").innerText = "✅ ඔබේ අදහස් අපට ලැබී ඇත!";
-  // optionally store feedback in localStorage (not exported in game CSV)
-  const fb = { name: this.name.value, email: this.email.value, message: this.message.value, ts: new Date().toLocaleString() };
-  localStorage.setItem("akuruMithuraFeedback", JSON.stringify((JSON.parse(localStorage.getItem("akuruMithuraFeedback")||"[]")).concat(fb)));
-  this.reset();
-});
-
-/* ===== Overall accuracy calculation ===== */
-function calculateOverall(){
-  // Find most recent accuracy metrics
-  const traceAcc = parseInt(document.getElementById("traceAccuracy").innerText) || 0;
-  const memAcc = parseInt(document.getElementById("memoryAccuracy").innerText) || 0;
-  const vcAcc = parseInt(document.getElementById("vcAcc").innerText) || 0;
-  const tapAcc = parseInt(document.getElementById("tapAcc").innerText) || 0;
-  const voiceAcc = parseInt(document.getElementById("voiceAcc").innerText) || 0;
-  const arr = [traceAcc, memAcc, vcAcc, tapAcc, voiceAcc].filter(a=>!isNaN(a));
-  const overall = arr.length ? Math.round(arr.reduce((s,v)=>s+v,0)/arr.length) : 0;
-  document.getElementById("overallAccuracy").innerText = overall;
-}
-
-/* ===== On load default initializations ===== */
-window.onload = function(){
-  // tracing started earlier
-  document.getElementById("memoryGame").innerHTML = "";
-  newVCRound();
-  // tie some UI buttons
-  document.getElementById("memoryStartBtn").addEventListener("click", initMemoryGame);
-  // initialize tap grid empty
-  document.getElementById("tapGrid").innerHTML = "";
-};
-
-/* Expose admin helpers in console if needed */
-window.getAllHistory = getAllHistory;
-window.saveRecord = saveRecord;
-window.downloadData = downloadData;
-
-</script>
+        // Add loading animation to game links
+        document.querySelectorAll('.game-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="loading"></span> පූරණය වෙමින්...';
+                this.style.pointerEvents = 'none';
+                
+                // Reset after a short delay (in case of slow loading)
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.style.pointerEvents = 'auto';
+                }, 2000);
+            });
+        });
+    </script>
 </body>
 </html>
